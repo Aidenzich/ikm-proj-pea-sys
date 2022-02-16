@@ -74,7 +74,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="white" expand="lg">
         <Container>
           <Navbar.Brand href="#home">計畫演變分析系統</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
