@@ -96,8 +96,8 @@ function App() {
       <header className="App-header">            
         <Row className="card-margin-top m-auto align-self-center" style={temp_style}>
           <Col style={{paddingTop:'3vh'}}>
-            <Card className="m-auto" style={{width:"75vw", borderRadius: "20px",}}>
-              <Card.Body  >
+            <Card className="m-auto" style={{ width:"75vw", borderRadius: "20px",}}>
+              <Card.Body  style={{}}>
               <Gantt                 
                 tasks={tasks}
                 viewMode={ViewMode.Month}
@@ -108,7 +108,7 @@ function App() {
                 // rowHeight={60}                 
                 onDoubleClick={handleExpanderClick}
                 // TaskListHeader={TaskListHeaderDefault}
-                ganttHeight={800}
+                ganttHeight={600}
               />
               </Card.Body>
             </Card>
