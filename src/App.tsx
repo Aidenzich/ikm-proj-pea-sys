@@ -9,17 +9,19 @@ import { Button, Card, Container, Row, Col,
   Navbar, NavDropdown, Nav
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import {TaskListHeaderDefault} from "./task-list-header"
+
+import { MyToolTipContent } from './components/myTooltip'
+
 
 
 function App() {
-  
   var temp_style={
       background: "#f0f0f0",
       height: "94.5vh",
       
   }
 
+ 
   const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());
   // const [allTasks, setAllTasks] = React.useState<Task[]>(loadExample());
   
@@ -95,21 +97,24 @@ function App() {
       </Navbar>
       <header className="App-header">            
         <Row className="card-margin-top m-auto align-self-center" style={temp_style}>
-          <Col style={{paddingTop:'3vh'}}>
-            <Card className="m-auto" style={{ width:"75vw", borderRadius: "20px",}}>
-              <Card.Body  style={{}}>
-              <Gantt                 
-                tasks={tasks}
-                viewMode={ViewMode.Month}
-                // handleWidth={300}
-                columnWidth={15}
-                // rtl={false}
-                listCellWidth={""}
-                // rowHeight={60}                 
-                onDoubleClick={handleExpanderClick}
-                // TaskListHeader={TaskListHeaderDefault}
-                ganttHeight={600}
-              />
+          <Col style={{paddingTop:'5vh'}}>
+            <Card className="m-auto" style={{ width:"80vw", maxWidth:"1600px", borderRadius: "20px",}}>
+              <Card.Body className="m-auto  align-self-center">
+              <div className="p-auto" style={{width:"75vw", minWidth:"100eh"}}>
+                <Gantt
+                  tasks={tasks}
+                  viewMode={ViewMode.Month}
+                  // handleWidth={300}
+                  columnWidth={14}
+                  // rtl={false}
+                  listCellWidth={""}
+                  // rowHeight={60}     
+                  TooltipContent={MyToolTipContent}
+                  onDoubleClick={handleExpanderClick}
+                  // TaskListHeader={TaskListHeaderDefault}
+                  ganttHeight={625}
+                />
+              </div>              
               </Card.Body>
             </Card>
           </Col>

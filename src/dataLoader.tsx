@@ -32,8 +32,10 @@ export function loadData(){
                 fontSize:"32px",
                 rowHeight:100
             },
-            temp: 'aaaa'
+            data: data[i]
+            // temp: 'aaaa'
         } as Task;
+        // console.log(data)
         // console.log(temp)
         tasks.push(temp);
     }
@@ -52,9 +54,12 @@ export function loadData(){
             styles: { 
                 backgroundColor:taskColor,
                 progressColor:taskColor, 
-                progressSelectedColor:taskColor,
-                
+                progressSelectedColor:taskColor,                
             },
+            data: {
+                "keyword": proj_data[i].keyword,
+                "ner": proj_data[i].ner
+            }
         } as Task;
         
         tasks.push(temp);
