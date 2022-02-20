@@ -59,7 +59,8 @@ for idx, l in enumerate(label_list):
             "displayOrder":int(display_order),
             "project": temp_id,
             "keyword": row['keyword'] if (row['keyword'] and row['keyword'].strip())  else "無",
-            "ner":   row['ner'] if (row['ner'] and row['ner'].strip()) else "無"
+            "ner":   row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
+            "tf_idf":   row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
         }
         proj_data.append(p_json)
 

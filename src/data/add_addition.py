@@ -19,13 +19,11 @@ df = pd.read_csv(CSVPATH)
 df2 = pd.read_csv(CSVPATH2)
 
 
-
-
 # %%
 df2['關鍵詞'] = df2['關鍵詞'].apply(lambda x: x.replace('[', '').replace(']', '').replace("'", ''))
 df2['NER'] = df2['NER'].apply(lambda x: x.replace('[', '').replace(']', '').replace("'", ''))
 
-df2
+df2.drop_duplicates(subset=['計畫名稱'], inplace=True)
 
 #%%
 
@@ -33,7 +31,6 @@ df.rename(columns={
     '計畫完整中文名稱': 'name', 
     '年度':'year'
 }, inplace=True)
-print(df)
 
 #%%
 
@@ -52,6 +49,6 @@ result
 result.drop(columns=['class'], inplace=True)
 
 #%%
-result
+result = result[~(result.year == '年度')]
 
 result.to_csv('result.csv', index=False)

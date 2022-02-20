@@ -33,7 +33,7 @@ export function loadData(){
                 rowHeight:100
             },
             data: data[i]
-            // temp: 'aaaa'
+            
         } as Task;
         // console.log(data)
         // console.log(temp)
@@ -58,7 +58,8 @@ export function loadData(){
             },
             data: {
                 "keyword": proj_data[i].keyword,
-                "ner": proj_data[i].ner
+                "ner": proj_data[i].ner,
+                "tf_idf": proj_data[i].tf_idf
             }
         } as Task;
         
