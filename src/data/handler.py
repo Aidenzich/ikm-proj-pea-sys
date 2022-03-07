@@ -21,7 +21,8 @@ df.fillna(" ", inplace=True)
 # exit()
 df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
 df['year'] = pd.to_numeric(df['year'])
-
+df['year_end'] = pd.to_numeric(df['year_end'])
+df['year_diff'] = df['year_end'] - df['year']
 df.sort_values(by=['label'], ascending=False, inplace=True)
 
 label_data = []
@@ -30,6 +31,7 @@ display_order = 0
 
 label_list = df['label'].unique()
 label_list = sorted(label_list, key= lambda x: str(x).isnumeric())
+
 for idx, l in enumerate(label_list):
     display_order+=1
     label_df = df[df['label']==l]    
@@ -37,7 +39,7 @@ for idx, l in enumerate(label_list):
     temp_id = f"main_{idx}"    
     l_json = {
         "start":int(min(year_list)),
-        "end":int(max(year_list)),
+        "end":int(max(year_list))+1,
         "name":l,
         "id": temp_id,
         "displayOrder": display_order,        
@@ -47,13 +49,13 @@ for idx, l in enumerate(label_list):
     label_data.append(l_json)
     # project_df = label_df['name']
     # print(label_df)
-    label_df.sort_values(by=['year'], inplace=True)
+    label_df.sort_values(by=['year', 'year_diff'], inplace=True)
     for idx2, (_, row) in enumerate(label_df.iterrows()):
         display_order+=1
-        row['name'] = str(row["year"])+ "年度  - " + row['name']
+        row['name'] = row['name']
         p_json = {
             "start": int(row['year']),
-            "end": int(row['year'])+1,
+            "end": int(row['year_end']) +1,
             "name":row['name'],
             "id":f"proj_{idx2}",
             "displayOrder":int(display_order),
@@ -61,6 +63,7 @@ for idx, l in enumerate(label_list):
             "keyword": row['keyword'] if (row['keyword'] and row['keyword'].strip())  else "無",
             "ner":   row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
             "tf_idf":   row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
+            "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
         }
         proj_data.append(p_json)
 
@@ -72,3 +75,5 @@ with open(os.path.join(DATAPATH, "main.json"), "w") as jf:
 with open(os.path.join(DATAPATH, "proj.json"), "w") as jf:
     jf.write(p_jsonString)
 
+
+# %%

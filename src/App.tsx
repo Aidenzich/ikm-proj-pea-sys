@@ -97,21 +97,17 @@ function App() {
       </Navbar>
       <header className="App-header">            
         <Row className="card-margin-top m-auto align-self-center" style={temp_style}>
-          <Col style={{paddingTop:'5vh'}}>
-            <Card className="m-auto" style={{ width:"80vw", maxWidth:"1600px", borderRadius: "20px",}}>
+          <Col style={{paddingTop:'2vh'}}>
+            <Card className="m-auto" style={{ width:"auto", maxWidth:"95vw", borderRadius: "20px",}}>
               <Card.Body className="m-auto  align-self-center">
-              <div className="p-auto" style={{width:"75vw", minWidth:"100eh"}}>
+              <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                 <Gantt
                   tasks={tasks}
-                  viewMode={ViewMode.Month}
-                  // handleWidth={300}
-                  columnWidth={14}
-                  // rtl={false}
-                  listCellWidth={""}
-                  // rowHeight={60}     
+                  viewMode={ViewMode.Month}          
+                  columnWidth={18}
+                  listCellWidth={""}                  
                   TooltipContent={MyToolTipContent}
                   onDoubleClick={handleExpanderClick}
-                  // TaskListHeader={TaskListHeaderDefault}
                   ganttHeight={625}
                 />
               </div>              

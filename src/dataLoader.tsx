@@ -17,8 +17,8 @@ export function loadData(){
     
     for (let i=0; i<data.length; ++i){        
         const temp = {
-            start: new Date(data[i].start + 1911, 1, 1),
-            end: new Date(data[i].end + 1911, 1, 1),
+            start: new Date(data[i].start, 1, 1),
+            end: new Date(data[i].end, 1, 1),
             name: data[i].name,
             id: data[i].id,
             displayOrder: data[i].displayOrder,
@@ -43,8 +43,8 @@ export function loadData(){
     for (let i=0; i<proj_data.length; ++i){
         // console.log(i)
         const temp = {
-            start: new Date(proj_data[i].start + 1911, 1, 1),
-            end: new Date(proj_data[i].end + 1911, 1, 1),
+            start: new Date(proj_data[i].start, 1, 1),
+            end: new Date(proj_data[i].end, 1, 1),
             name: proj_data[i].name,
             id: proj_data[i].id,
             displayOrder: proj_data[i].displayOrder,
@@ -59,7 +59,8 @@ export function loadData(){
             data: {
                 "keyword": proj_data[i].keyword,
                 "ner": proj_data[i].ner,
-                "tf_idf": proj_data[i].tf_idf
+                "tf_idf": proj_data[i].tf_idf,
+                "desp": proj_data[i].desp,
             }
         } as Task;
         
