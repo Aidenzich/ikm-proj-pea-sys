@@ -10,9 +10,15 @@ const color_list = [
 
 const taskColor="#2E4E78";
 
-export function loadData(){
-    var data = require('./data/main.json');
-    var proj_data = require('./data/proj.json');
+export function loadData(cat20=true){
+    
+    var data = require('./data/main_result20.json');    
+    var proj_data = require('./data/proj_result20.json');
+    if (!cat20){
+        data = require('./data/main_result30.json');
+        proj_data = require('./data/proj_result30.json');
+    }
+
     const tasks: Task[] = [];
     
     for (let i=0; i<data.length; ++i){        

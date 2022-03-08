@@ -1,16 +1,12 @@
 
-import {Card, Container, Row, Col,Navbar, Nav} from 'react-bootstrap';
+import {Card, Container, Button, Row, Col,Navbar, Nav} from 'react-bootstrap';
 import { MyToolTipContent } from './components/myTooltip';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import { loadData } from './dataLoader';
-import React  from 'react';
+import React, { useEffect }  from 'react';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-
-
 
 function App() {
   var temp_style={
@@ -19,12 +15,15 @@ function App() {
       
   }
 
- 
   const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());  
   const [tasks, setTasks] = React.useState<Task[]>(getProjectArr());
   
   const [expand, setExpand] = React.useState(false);
-  const [curTask, setCurTask] = React.useState<string>("");
+  const [curTask, setCurTask] = React.useState<string>("");  
+
+  useEffect(()=>{
+    setTasks(getProjectArr());
+  }, [allTasks])
 
   const handleExpanderClick = (task: Task) => {
     if (task.type === "project"){
@@ -45,7 +44,17 @@ function App() {
     }
   };
 
-  
+  function toggle(state1: boolean) {
+    if (state1){
+      // alert("切換為20種類別")
+      setAllTasks(loadData());
+    } else {
+      // alert("切換為30種類別")
+      setAllTasks(loadData(false));
+      setTasks(getProjectArr())
+    }
+  }
+
   function getProjectArr(): Task[]{
     const temp = [];
     for (var i=0; i< allTasks.length; i++){
@@ -63,14 +72,13 @@ function App() {
     if (project != null){      
       for (var i=0; i< allTasks.length; i++){        
         if (allTasks[i].project === project.id) {temp.push(allTasks[i]); childCount++;};
-      }
-            
+      }            
     }
     return temp;
   }
 
   return (
-    <div className="App">
+    <div className="App">      
       <Navbar bg="white" expand="lg">
         <Container>
           <Navbar.Brand href="#home">計畫演變分析系統</Navbar.Brand>
@@ -80,13 +88,13 @@ function App() {
             </Nav>
           </Navbar.Collapse>
         </Container>
-      </Navbar>
+      </Navbar>    
       <header className="App-header">            
-        <Row className="card-margin-top m-auto align-self-center" style={temp_style}>
+        <Row className="card-margin-top m-auto align-self-center" style={temp_style}>        
           <Col style={{paddingTop:'2vh'}}>
             <Card className="m-auto" style={{ width:"auto", maxWidth:"95vw", borderRadius: "20px",}}>
-              <Card.Body className="m-auto  align-self-center">
-              <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
+              <Card.Body className="m-auto  align-self-center">                                                                                  
+                <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                 <Gantt
                   tasks={tasks}
                   viewMode={ViewMode.Month}          
@@ -96,9 +104,14 @@ function App() {
                   onDoubleClick={handleExpanderClick}
                   ganttHeight={625}
                 />
-              </div>              
+                </div>
+                <div style={{margin:"1vw"}}>
+                  <Button onClick={()=> toggle(true)} variant="primary">20 Category</Button>{' '}                                
+                  <Button onClick={()=> toggle(false)} variant="secondary">30 Category</Button>{' '}
+                </div>
               </Card.Body>
             </Card>
+      
           </Col>
         </Row>
       </header>
