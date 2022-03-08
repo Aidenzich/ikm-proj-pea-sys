@@ -1,4 +1,5 @@
 #%%
+from itertools import count
 from turtle import Turtle
 import pandas as pd
 import os
@@ -32,18 +33,38 @@ display_order = 0
 label_list = df['label'].unique()
 label_list = sorted(label_list, key= lambda x: str(x).isnumeric())
 
+TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
+
+
+
+
+def init_count_years(total_years: list):
+    count_years = {}
+    for y in total_years:
+        count_years[y] = 0
+    return count_years
+
+
 for idx, l in enumerate(label_list):
     display_order+=1
     label_df = df[df['label']==l]    
     year_list = label_df['year'].unique()
-    temp_id = f"main_{idx}"    
+    temp_id = f"main_{idx}"
+    
+    count_years = init_count_years(TOTAL_YEARS)
+    temp_year_count = dict(label_df['year'].value_counts().sort_index())
+    for y in temp_year_count.keys():
+        
+        count_years[int(y)] = int(temp_year_count[y])
+
+
     l_json = {
         "start":int(min(year_list)),
         "end":int(max(year_list))+1,
         "name":l,
         "id": temp_id,
         "displayOrder": display_order,        
-        "series": label_df['year'].value_counts().sort_index().tolist()
+        "series": list(count_years.values())
     }
 
     label_data.append(l_json)
