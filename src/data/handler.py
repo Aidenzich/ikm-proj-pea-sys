@@ -43,7 +43,7 @@ df.fillna(" ", inplace=True)
 df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
 df['year'] = pd.to_numeric(df['year'])
 df['year_end'] = pd.to_numeric(df['year_end'])
-df['year_diff'] = df['year_end'] - df['year']
+df['year_diff'] = df['year_end'] - df['year_start']
 df.sort_values(by=['label'], ascending=False, inplace=True)
 
 label_data = []
