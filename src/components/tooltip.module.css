@@ -1,5 +1,5 @@
 .tooltipDefaultContainer {
-    
+    max-width: 80vw;
     margin-left: 500px;
     max-height: 90vh;
     background-color: #FFF;
