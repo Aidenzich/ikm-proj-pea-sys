@@ -16,10 +16,30 @@ ROOTPATH = os.path.abspath(os.path.join(
 
 DATAPATH = os.path.join(ROOTPATH, "data")
 CSVPATH = os.path.join(DATAPATH, "result.csv")
+
+
+def init_count_years(total_years: list):
+    count_years = {}
+    for y in total_years:
+        count_years[y] = 0
+    return count_years
+
+
 df = pd.read_csv(CSVPATH)
+
+
+
+for c in df.columns.tolist():
+    if df[c].dtype == "object" and c != 'description':
+        df[c] = df[c].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ''))
+
+df['description'] = df['description'].apply(lambda x: str(x).replace('_x000D_', ''))
+
+
+df.to_csv(DATAPATH+'/result.csv', index=False)
+
 df.fillna(" ", inplace=True)
-# print(df)
-# exit()
+
 df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
 df['year'] = pd.to_numeric(df['year'])
 df['year_end'] = pd.to_numeric(df['year_end'])
@@ -38,11 +58,6 @@ TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
 
 
 
-def init_count_years(total_years: list):
-    count_years = {}
-    for y in total_years:
-        count_years[y] = 0
-    return count_years
 
 
 for idx, l in enumerate(label_list):
@@ -52,9 +67,12 @@ for idx, l in enumerate(label_list):
     temp_id = f"main_{idx}"
     
     count_years = init_count_years(TOTAL_YEARS)
+
     temp_year_count = dict(label_df['year'].value_counts().sort_index())
-    for y in temp_year_count.keys():
-        
+    
+    # print(l)
+    # print(temp_year_count)
+    for y in temp_year_count.keys():        
         count_years[int(y)] = int(temp_year_count[y])
 
 
@@ -67,15 +85,13 @@ for idx, l in enumerate(label_list):
         "series": list(count_years.values())
     }
 
-    label_data.append(l_json)
-    # project_df = label_df['name']
-    # print(label_df)
-    label_df.sort_values(by=['year', 'year_diff'], inplace=True)
+    label_data.append(l_json)    
+    label_df.sort_values(by=['year_start', 'year_diff'], inplace=True)
     for idx2, (_, row) in enumerate(label_df.iterrows()):
         display_order+=1
         row['name'] = row['name']
         p_json = {
-            "start": int(row['year']),
+            "start": int(row['year_start']),
             "end": int(row['year_end']) +1,
             "name":row['name'],
             "id":f"proj_{idx2}",

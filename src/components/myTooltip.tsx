@@ -37,7 +37,7 @@ export const MyToolTipContent: React.FC<{
       try{
         if (task['data']['series']){
           temp.series[0].data = task.data.series
-          // setState(temp);
+          
           return true;
         }
       }catch(e){

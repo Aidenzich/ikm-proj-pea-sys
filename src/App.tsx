@@ -1,16 +1,14 @@
-import React, {useState, useEffect}  from 'react';
+
+import {Card, Container, Row, Col,Navbar, Nav} from 'react-bootstrap';
+import { MyToolTipContent } from './components/myTooltip';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
+import { loadData } from './dataLoader';
+import React  from 'react';
 import './App.css';
-
-import { loadData, loadExample } from './dataLoader';
 import "gantt-task-react/dist/index.css";
-
-import { Button, Card, Container, Row, Col,
-  Navbar, NavDropdown, Nav
-} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { MyToolTipContent } from './components/myTooltip'
+
 
 
 
@@ -22,16 +20,13 @@ function App() {
   }
 
  
-  const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());
-  // const [allTasks, setAllTasks] = React.useState<Task[]>(loadExample());
-  
+  const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());  
   const [tasks, setTasks] = React.useState<Task[]>(getProjectArr());
   
   const [expand, setExpand] = React.useState(false);
   const [curTask, setCurTask] = React.useState<string>("");
 
-  const handleExpanderClick = (task: Task) => {    
-    // console.log("expand")
+  const handleExpanderClick = (task: Task) => {
     if (task.type === "project"){
       if (expand && curTask === task.id){
         setExpand(false);
@@ -82,15 +77,6 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              {/* <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown> */}
             </Nav>
           </Navbar.Collapse>
         </Container>

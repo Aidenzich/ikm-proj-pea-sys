@@ -32,16 +32,13 @@ export function loadData(){
                 fontSize:"32px",
                 rowHeight:100
             },
-            data: data[i]
-            
+            data: data[i]            
         } as Task;
-        // console.log(data)
-        // console.log(temp)
+
         tasks.push(temp);
     }
 
-    for (let i=0; i<proj_data.length; ++i){
-        // console.log(i)
+    for (let i=0; i<proj_data.length; ++i){        
         const temp = {
             start: new Date(proj_data[i].start, 1, 1),
             end: new Date(proj_data[i].end, 1, 1),

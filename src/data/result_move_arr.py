@@ -18,6 +18,8 @@ for c in df.columns.tolist():
         df[c] = df[c].apply(lambda x: x.replace('[', '').replace(']', '').replace("'", ''))
 
 
+df['description'] = df['description'].apply(lambda x: x.replace(''))
+
 # import re
 # r = re.compile(r"\x28[^\x29]+\x29")
 # print(df.columns.tolist())
