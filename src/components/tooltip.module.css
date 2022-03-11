@@ -6,14 +6,30 @@
     padding: 7px;
     border-radius: 20px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    /* width: auto;
-    min-width: 50vw;
-    min-height: 50vh;
-    
-    position: absolute;
-    float: right !important;  */
-    /* top: 100px; */
 }
+
+
+.myInfo{
+    max-width: 45vw;
+    
+    height: 60vh;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    background-color: #FFF;
+    border-radius: 20px;
+    position:absolute; 
+    top:10%;
+    left:50%;
+}
+
+.desp {
+    text-align: left;
+    background-color: #FFF;
+    padding: 5px;
+    height: 50vh;
+    overflow-y: scroll;
+}
+
+
 
 /* .tooltipDefaultContainer {
     margin-left: 700px;

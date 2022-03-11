@@ -80,7 +80,7 @@ def cleanAndSaveJson(filename):
         }
 
         label_data.append(l_json)    
-        label_df.sort_values(by=['year_start', 'year_diff'], inplace=True)
+        label_df.sort_values(by=['year', 'year'], inplace=True)
         for idx2, (_, row) in enumerate(label_df.iterrows()):
             display_order+=1
             row['name'] = row['name']

@@ -1,6 +1,7 @@
 
 import {Card, Container, Button, Row, Col,Navbar, Nav} from 'react-bootstrap';
 import { MyToolTipContent } from './components/myTooltip';
+import { MyInfo } from './components/myInfo';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import { loadData } from './dataLoader';
 import React, { useEffect }  from 'react';
@@ -12,44 +13,40 @@ function App() {
   var temp_style={
       background: "#f0f0f0",
       height: "94.5vh",
-      
   }
 
   const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());  
   const [tasks, setTasks] = React.useState<Task[]>(getProjectArr());
   
   const [expand, setExpand] = React.useState(false);
-  const [curTask, setCurTask] = React.useState<string>("");  
+  const [curTask, setCurTask] = React.useState<Task>();  
 
   useEffect(()=>{
     setTasks(getProjectArr());
   }, [allTasks])
 
-  const handleExpanderClick = (task: Task) => {
+  const handleExpanderClick = (task: Task) => {    
     if (task.type === "project"){
-      if (expand && curTask === task.id){
+      if (expand && curTask === task){
         setExpand(false);
         setTasks(getProjectArr());
       } else {
         setExpand(true);
-        console.log(task);
         let pt: Task[] = getProjectTasks(task);
-        console.log(pt);
         let p: Task[] = getProjectArr();
         let all: Task[] = pt?.concat(p);
         if (pt.length == 0 ) alert("This project has no tasks.")
         setTasks(all);
-        setCurTask(task.id)
       }
-    }
+    };
+    setCurTask(task);
   };
 
+
   function toggle(state1: boolean) {
-    if (state1){
-      // alert("切換為20種類別")
+    if (state1){      
       setAllTasks(loadData());
-    } else {
-      // alert("切換為30種類別")
+    } else {    
       setAllTasks(loadData(false));
       setTasks(getProjectArr())
     }
@@ -78,7 +75,8 @@ function App() {
   }
 
   return (
-    <div className="App">      
+    <div className="App">
+      
       <Navbar bg="white" expand="lg">
         <Container>
           <Navbar.Brand href="#home">計畫演變分析系統</Navbar.Brand>
@@ -98,7 +96,7 @@ function App() {
                 <Gantt
                   tasks={tasks}
                   viewMode={ViewMode.Month}          
-                  columnWidth={18}
+                  columnWidth={13}
                   listCellWidth={""}                  
                   TooltipContent={MyToolTipContent}
                   onDoubleClick={handleExpanderClick}
@@ -113,6 +111,14 @@ function App() {
             </Card>
       
           </Col>
+          <div>
+              {
+                (curTask != null && curTask.type=="task")? <MyInfo
+                  task={curTask}
+                  setCurTask={setCurTask}
+                />:null
+              }
+          </div>
         </Row>
       </header>
     </div>
