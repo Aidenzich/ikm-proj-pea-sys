@@ -1,29 +1,28 @@
 import { padding } from '@mui/system';
 import React, {useState, useEffect}  from 'react';
 import { Alert, Row, Col, CloseButton } from 'react-bootstrap';
-import styles from "./tooltip.module.css";
+import styles from "./myComponents.module.css";
 
 export const MyInfo: React.FC<{
     task: any;
     setCurTask: Function;
 
 }> = ({ task, setCurTask}) => {
-    if (task == null){
+    if (task == undefined){
         return null;
     }
 
-    return (    
+    return (
+      
       <Row className={styles.myInfo} >
-        <Row style={{padding:"5px"}}>
-            <Col xs={10}>
-                <h4>{task.name}</h4>
-            </Col>
-            <Col>
-                <CloseButton 
-                    onClick={()=>setCurTask(null)} 
-                >                    
-                </CloseButton>    
-            </Col>
+        <Row>
+          <CloseButton 
+              onClick={()=>setCurTask(null)} 
+          >                    
+          </CloseButton>
+        </Row>
+        <Row style={{padding:"5px", textAlign:"center"}}>
+            <h4>{task.name}</h4>
         </Row>
         <Col xs={6}>
             <h5>計畫描述</h5>

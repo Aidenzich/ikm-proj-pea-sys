@@ -48,7 +48,7 @@ export function loadData(cat20=true){
         const temp = {
             start: new Date(proj_data[i].start, 1, 1),
             end: new Date(proj_data[i].end, 1, 1),
-            name: proj_data[i].name,
+            name:  proj_data[i].name,
             id: proj_data[i].id,
             displayOrder: proj_data[i].displayOrder,
             type: "task",

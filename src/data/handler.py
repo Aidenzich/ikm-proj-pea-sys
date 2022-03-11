@@ -1,9 +1,10 @@
 #%%
 import pandas as pd
 import os
+import re
 import json
 from pathlib import Path
-
+pd.options.mode.chained_assignment = None 
 
 ROOT_PATH = Path(__file__).parent.parent
 DATA_PATH = ROOT_PATH / 'data'
@@ -31,7 +32,6 @@ def cleanAndSaveJson(filename):
 
 
     df.to_csv(filepath, index=False)
-
     df.fillna(" ", inplace=True)
 
     df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
@@ -44,28 +44,21 @@ def cleanAndSaveJson(filename):
     proj_data = []
     display_order = 0
 
-    label_list = df['label'].unique()
-    label_list = sorted(label_list, key= lambda x: str(x).isnumeric())
+    label_list = df['label'].unique().tolist()
+    # label_list = sorted(label_list, key= lambda x: str(x).isnumeric())
 
     TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
-
-
-
-
-
-
-    for idx, l in enumerate(label_list):
+    proj_id = 0
+    for main_id, l in enumerate(label_list):
         display_order+=1
         label_df = df[df['label']==l]    
         year_list = label_df['year'].unique()
-        temp_id = f"main_{idx}"
+        project_id = f"main_{main_id}"
         
         count_years = init_count_years(TOTAL_YEARS)
 
         temp_year_count = dict(label_df['year'].value_counts().sort_index())
         
-        # print(l)
-        # print(temp_year_count)
         for y in temp_year_count.keys():        
             count_years[int(y)] = int(temp_year_count[y])
 
@@ -74,30 +67,40 @@ def cleanAndSaveJson(filename):
             "start":int(min(year_list)),
             "end":int(max(year_list))+1,
             "name":l,
-            "id": temp_id,
+            "id": project_id,
             "displayOrder": display_order,        
             "series": list(count_years.values())
         }
 
         label_data.append(l_json)    
-        label_df.sort_values(by=['year', 'year'], inplace=True)
-        for idx2, (_, row) in enumerate(label_df.iterrows()):
-            display_order+=1
-            row['name'] = row['name']
-            p_json = {
-                "start": int(row['year_start']),
-                "end": int(row['year_end']) +1,
-                "name":row['name'],
-                "id":f"proj_{idx2}",
-                "displayOrder":int(display_order),
-                "project": temp_id,
-                "keyword": row['keyword'] if (row['keyword'] and row['keyword'].strip())  else "無",
-                "ner":   row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
-                "tf_idf":   row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
-                "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
-            }
-            proj_data.append(p_json)
+        label_df.sort_values(by=['year'], inplace=True)
 
+        r = re.compile(r"\x28[^\x29]+\x29")
+
+        label_df['proj_name'] = label_df['name'].apply(lambda x: r.sub('', x))
+        label_projs = label_df['proj_name'].unique().tolist()
+
+        
+        for lp in label_projs:                        
+            lp_df = label_df[label_df['proj_name'] == lp]
+            
+            for _, row in lp_df.iterrows():
+                display_order +=1
+                proj_id+=1
+                p_json = {
+                    "start": int(row['year']),
+                    "end": int(row['year']) +1,
+                    "name":row['name'],
+                    "id":f"proj_{proj_id}",
+                    "displayOrder":int(display_order),
+                    "project": project_id,
+                    "keyword": row['keyword'] if (row['keyword'] and row['keyword'].strip())  else "無",
+                    "ner": row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
+                    "tf_idf": row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
+                    "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
+                }
+                proj_data.append(p_json)
+        # exit()
     l_jsonString = json.dumps(label_data)
     p_jsonString = json.dumps(proj_data)
 
