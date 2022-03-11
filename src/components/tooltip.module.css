@@ -11,8 +11,10 @@
 
 .myInfo{
     max-width: 45vw;
-    
+    padding: 20px;
     height: 60vh;
+    max-height: 80vh;
+    overflow-y: scroll;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     background-color: #FFF;
     border-radius: 20px;

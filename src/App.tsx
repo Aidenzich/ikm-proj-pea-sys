@@ -27,7 +27,9 @@ function App() {
 
   const handleExpanderClick = (task: Task) => {    
     if (task.type === "project"){
-      if (expand && curTask === task){
+      
+      if (expand && curTask!=null && curTask.displayOrder == task.displayOrder){
+        
         setExpand(false);
         setTasks(getProjectArr());
       } else {
