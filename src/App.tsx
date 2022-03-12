@@ -1,5 +1,5 @@
 
-import {Card, Container, Button, Row, Col,Navbar, Nav} from 'react-bootstrap';
+import {Card, Container, Button, Row, Col, Navbar, Nav, Form} from 'react-bootstrap';
 import { MyToolTipContent } from './components/myTooltip';
 import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
@@ -24,14 +24,7 @@ function App() {
   const [expand, setExpand] = React.useState(false);
   const [curTask, setCurTask] = React.useState<Task>();  
 
-  function toggle(state1: boolean) {
-    if (state1){
-      setAllTasks(loadData());
-    } else {    
-      setAllTasks(loadData(false));
-      setTasks(getProjects());
-    }
-  }
+
 
   useEffect(()=>{
     setTasks(getProjects());
@@ -40,7 +33,6 @@ function App() {
   const handleExpanderClick = (task: Task) => {    
     if (task.type === "project"){
       if (expand && curTask!=undefined && curTask.displayOrder == task.displayOrder){
-
         setExpand(false);
         setTasks(getProjects());
       } else {
@@ -78,6 +70,25 @@ function App() {
     return tasks;
   }
 
+  // function toggle(state1: boolean) {
+  //   if (state1){
+  //     setAllTasks(loadData());
+  //   } else {    
+  //     setAllTasks(loadData(false));
+  //     setTasks(getProjects());
+  //   }
+  // }
+
+  function changeEvent(event: any){
+    
+    if (event.target.value == '1'){
+      setAllTasks(loadData());
+    } else {
+      setAllTasks(loadData(false));
+      setTasks(getProjects());
+    }
+  }
+
   return (
     <div className="App" style={temp_style}>            
       <header className="App-header"  >
@@ -86,9 +97,11 @@ function App() {
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px", borderRadius: "20px",}}>
-              <div style={{margin:"5px"}}>
-                <Button onClick={()=> toggle(true)} variant="primary">20 Category</Button>{' '}                                
-                <Button onClick={()=> toggle(false)} variant="secondary">30 Category</Button>{' '}
+              <div style={{margin:"5px", marginTop:"20px"}}>                
+                <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>                  
+                  <option value="1">20 Category</option>
+                  <option value="2">30 Category</option>                  
+                </Form.Select>
               </div>
               <Card.Body className="m-auto  align-self-center">                                                                                  
                 <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
@@ -102,7 +115,6 @@ function App() {
                   ganttHeight={550}
                 />
                 </div>
-
               </Card.Body>
             </Card>
           </Col>
@@ -114,8 +126,7 @@ function App() {
                 />:null
               }
           </span>
-        </Row>
-        
+        </Row>        
       </header>
     </div>
   );
