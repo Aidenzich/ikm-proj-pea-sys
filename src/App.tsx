@@ -1,5 +1,5 @@
 
-import {Card, Container, Button, Row, Col, Navbar, Nav, Form} from 'react-bootstrap';
+import {Card, Row, Col, Form} from 'react-bootstrap';
 import { MyToolTipContent } from './components/myTooltip';
 import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
@@ -11,41 +11,56 @@ import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  var temp_style={
+  var app_style={
       background: "#f0f0f0",
       height: "100vh",  
   }
 
-  // 讀取所有資料
-  const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());  
+  // 讀取在背景的資料
+  const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());
   // 顯示的資料
-  const [tasks, setTasks] = React.useState<Task[]>(getProjects());
-  
-  const [expand, setExpand] = React.useState(false);
+  const [displayTasks, setDisplayTasks] = React.useState<Task[]>(getProjects());  
+  // 展開的計畫id
+  const [expandedProj, setexpandedProj] = React.useState<Task[]>([]);
   const [curTask, setCurTask] = React.useState<Task>();  
 
-
-
+  // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
   useEffect(()=>{
-    setTasks(getProjects());
-  }, [allTasks])
+    setDisplayTasks(getProjects());
+  }, [allTasks]);
+
+  // 控制展開項
+  useEffect(()=> {    
+      let diplayed: Task[] = [...getProjects()];      
+      for (let p=0; p < expandedProj.length; ++p){
+        let temp: Task[] = getTasks(expandedProj[p]);        
+        Array.prototype.push.apply(diplayed, temp);    
+      }      
+      setDisplayTasks(diplayed);    
+  }, [expandedProj]);  
 
   const handleExpanderClick = (task: Task) => {    
     if (task.type === "project"){
-      if (expand && curTask!=undefined && curTask.displayOrder == task.displayOrder){
-        setExpand(false);
-        setTasks(getProjects());
-      } else {
-        setExpand(true);
-        let tasks: Task[] = getTasks(task);
-        let projects: Task[] = getProjects();
-        let all: Task[] = tasks.concat(projects);
-        if (tasks.length == 0 ) alert("This project has no tasks.")
-        setTasks(all);
+      if (expandedProj.filter(ep=> ep.id === task.id).length > 0){
+        // 當計畫已展開，重新觸發即移除
+        // NOTE: https://stackoverflow.com/questions/62943332/useeffect-not-getting-trigger-after-state-change
+        const temp = [...expandedProj];
+        let rmProjIndex = temp.indexOf(task);        
+        temp.splice(rmProjIndex , 1);
+        setexpandedProj(temp);                
+      } else {        
+        if (!expandedProj.includes(task)){
+          const temp = [...expandedProj];
+          temp.push(task);
+          setexpandedProj(temp);          
+        }
       }
+      
     };
     setCurTask(task);
   };
+
+
 
   function getProjects(): Task[]{
     const temp = [];
@@ -70,28 +85,19 @@ function App() {
     return tasks;
   }
 
-  // function toggle(state1: boolean) {
-  //   if (state1){
-  //     setAllTasks(loadData());
-  //   } else {    
-  //     setAllTasks(loadData(false));
-  //     setTasks(getProjects());
-  //   }
-  // }
 
-  function changeEvent(event: any){
-    
+  function changeEvent(event: any){    
     if (event.target.value == '1'){
       setAllTasks(loadData());
     } else {
       setAllTasks(loadData(false));
-      setTasks(getProjects());
+      setDisplayTasks(getProjects());
     }
   }
 
   return (
-    <div className="App" style={temp_style}>            
-      <header className="App-header"  >
+    <div className="App" style={app_style}>            
+      <header className="App-header">
         <MyNav/>
         
         <Row className="card-margin-top m-auto align-self-center">
@@ -106,7 +112,7 @@ function App() {
               <Card.Body className="m-auto  align-self-center">                                                                                  
                 <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                 <Gantt
-                  tasks={tasks}
+                  tasks={displayTasks}
                   viewMode={ViewMode.Month}          
                   columnWidth={10}
                   listCellWidth={""}                  

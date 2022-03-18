@@ -36,8 +36,7 @@ def cleanAndSaveJson(filename):
 
     df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
     df['year'] = pd.to_numeric(df['year'])
-    df['year_end'] = pd.to_numeric(df['year_end'])
-    df['year_diff'] = df['year_end'].astype(int) - df['year_start'].astype(int)
+    df['year_end'] = pd.to_numeric(df['year_end'])    
     df.sort_values(by=['label'], ascending=False, inplace=True)
 
     label_data = []
@@ -49,6 +48,8 @@ def cleanAndSaveJson(filename):
 
     TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
     proj_id = 0
+    
+    # 類別分類
     for main_id, l in enumerate(label_list):
         display_order+=1
         label_df = df[df['label']==l]    
@@ -59,9 +60,9 @@ def cleanAndSaveJson(filename):
 
         temp_year_count = dict(label_df['year'].value_counts().sort_index())
         
+        # 取出該類別計畫各年份比數計算
         for y in temp_year_count.keys():        
             count_years[int(y)] = int(temp_year_count[y])
-
 
         l_json = {
             "start":int(min(year_list)),
@@ -72,14 +73,15 @@ def cleanAndSaveJson(filename):
             "series": list(count_years.values())
         }
 
-        label_data.append(l_json)    
+        label_data.append(l_json)
         label_df.sort_values(by=['year'], inplace=True)
 
+        # 建立regular expression 移除 (?/4) 字串的compile
         r = re.compile(r"\x28[^\x29]+\x29")
 
+        # 將
         label_df['proj_name'] = label_df['name'].apply(lambda x: r.sub('', x))
         label_projs = label_df['proj_name'].unique().tolist()
-
         
         for lp in label_projs:                        
             lp_df = label_df[label_df['proj_name'] == lp]
@@ -100,7 +102,7 @@ def cleanAndSaveJson(filename):
                     "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
                 }
                 proj_data.append(p_json)
-        # exit()
+    
     l_jsonString = json.dumps(label_data)
     p_jsonString = json.dumps(proj_data)
 
