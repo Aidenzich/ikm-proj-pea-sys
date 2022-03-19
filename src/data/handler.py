@@ -79,13 +79,12 @@ def cleanAndSaveJson(filename):
         # 建立regular expression 移除 (?/4) 字串的compile
         r = re.compile(r"\x28[^\x29]+\x29")
 
-        # 將
+        # 以 'proj_name' 欄位儲存移除pattern後的計畫名稱
         label_df['proj_name'] = label_df['name'].apply(lambda x: r.sub('', x))
-        label_projs = label_df['proj_name'].unique().tolist()
+        label_projs = label_df['proj_name'].unique().tolist() # 取得不重複之計畫名稱
         
-        for lp in label_projs:                        
-            lp_df = label_df[label_df['proj_name'] == lp]
-            
+        for lp in label_projs:
+            lp_df = label_df[label_df['proj_name'] == lp] # 以
             for _, row in lp_df.iterrows():
                 display_order +=1
                 proj_id+=1
