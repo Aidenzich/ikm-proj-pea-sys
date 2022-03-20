@@ -5,7 +5,7 @@ import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
 import { loadData } from './dataLoader';
-import React, { useEffect }  from 'react';
+import React, { useCallback, useEffect }  from 'react';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,29 +15,54 @@ function App() {
       background: "#f0f0f0",
       height: "100vh",  
   }
-
+    
   // 讀取在背景的資料
   const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());
+
+  // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
+  const getProjects = useCallback(()=>{
+    const temp = [];
+    for (var i=0; i< allTasks.length; i++){
+      if (allTasks[i].type === "project"){
+        temp.push(allTasks[i]);
+      }
+    }
+    return temp;
+  }, [allTasks])
+  
+  // 以 project 取得底下的 task
+  const getTasks = useCallback((project: Task): Task[] => {
+    const tasks = [];
+    if (project !== undefined){      
+      for (var i=0; i< allTasks.length; i++){        
+        if (allTasks[i].project === project.id) {
+          tasks.push(allTasks[i]);
+        };
+      }            
+    }
+    return tasks;
+  }, [allTasks])
+
   // 顯示的資料
   const [displayTasks, setDisplayTasks] = React.useState<Task[]>(getProjects());  
   // 展開的計畫id
   const [expandedProj, setexpandedProj] = React.useState<Task[]>([]);
   const [curTask, setCurTask] = React.useState<Task>();  
 
-  // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
   useEffect(()=>{
+    // alert("change")
     setDisplayTasks(getProjects());
-  }, [allTasks]);
+  }, [allTasks, getProjects]);
 
   // 控制展開項
   useEffect(()=> {    
-      let diplayed: Task[] = [...getProjects()];      
-      for (let p=0; p < expandedProj.length; ++p){
-        let temp: Task[] = getTasks(expandedProj[p]);        
-        Array.prototype.push.apply(diplayed, temp);    
-      }      
-      setDisplayTasks(diplayed);    
-  }, [expandedProj]);  
+    let diplayed: Task[] = [...getProjects()];      
+    for (let p=0; p < expandedProj.length; ++p){
+      let temp: Task[] = getTasks(expandedProj[p]);        
+      Array.prototype.push.apply(diplayed, temp);    
+    }      
+    setDisplayTasks(diplayed);
+  }, [expandedProj, getProjects, getTasks]);
 
   const handleExpanderClick = (task: Task) => {    
     if (task.type === "project"){
@@ -61,33 +86,8 @@ function App() {
   };
 
 
-
-  function getProjects(): Task[]{
-    const temp = [];
-    for (var i=0; i< allTasks.length; i++){
-      if (allTasks[i].type === "project"){
-        temp.push(allTasks[i]);
-      }
-    }
-    return temp;
-  }
-  
-  // 以 project 取得底下的 task
-  function getTasks(project: Task): Task[]{
-    const tasks = [];    
-    if (project != undefined){      
-      for (var i=0; i< allTasks.length; i++){        
-        if (allTasks[i].project === project.id) {
-          tasks.push(allTasks[i]);
-        };
-      }            
-    }
-    return tasks;
-  }
-
-
   function changeEvent(event: any){    
-    if (event.target.value == '1'){
+    if (event.target.value === '1'){
       setAllTasks(loadData());
     } else {
       setAllTasks(loadData(false));
@@ -98,8 +98,7 @@ function App() {
   return (
     <div className="App" style={app_style}>            
       <header className="App-header">
-        <MyNav/>
-        
+        <MyNav/>        
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px", borderRadius: "20px",}}>
@@ -126,7 +125,7 @@ function App() {
           </Col>
           <span>
               {
-                (curTask != null && curTask.type=="task")? <MyInfo
+                (curTask != null && curTask.type==="task")? <MyInfo
                   task={curTask}
                   setCurTask={setCurTask}
                 />:null
