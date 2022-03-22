@@ -98,7 +98,7 @@ function App() {
   }
 
   const searchTaskName = (searchInput: string) => {
-    let searchTasks = allTasks.filter(t=> t.name.includes(searchInput));
+    let searchTasks = allTasks.filter(t=> String(t.name).includes(searchInput));
     let searchTaskId: any[];
     let searchProjId: any[];
     searchProjId = [];
