@@ -9,11 +9,6 @@ pd.options.mode.chained_assignment = None
 ROOT_PATH = Path(__file__).parent.parent
 DATA_PATH = ROOT_PATH / 'data'
 
-
-
-DATAPATH = os.path.join(ROOT_PATH, "data")
-
-
 def init_count_years(total_years: list):
     count_years = {}
     for y in total_years:
@@ -101,15 +96,14 @@ def cleanAndSaveJson(filename):
                     "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
                 }
                 proj_data.append(p_json)
-    
-
 
     l_jsonString = json.dumps(label_data)
     p_jsonString = json.dumps(proj_data)
 
-    with open(os.path.join(DATAPATH, f"main_{filename.replace('.csv', '')}.json"), "w") as jf:
+    with open(DATA_PATH / f"main_{filename.replace('.csv', '')}.json", "w") as jf:
         jf.write(l_jsonString)
-    with open(os.path.join(DATAPATH, f"proj_{filename.replace('.csv', '')}.json"), "w") as jf:
+            
+    with open(DATA_PATH / f"proj_{filename.replace('.csv', '')}.json", "w") as jf:
         jf.write(p_jsonString)
 
 def cleanAndSaveJsonWithOrder(filename):
@@ -132,9 +126,7 @@ def cleanAndSaveJsonWithOrder(filename):
     label_data = []
     proj_data = []
 
-    label_list = df['label'].unique().tolist()
-    
-    # label_list = sorted(label_list, key= lambda x: str(x).isnumeric())
+    label_list = df['label'].unique().tolist()        
 
     TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
     proj_id = 0    

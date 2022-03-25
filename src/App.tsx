@@ -4,32 +4,32 @@ import { MyToolTipContent } from './components/myTooltip';
 import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
-import { loadData, testApexData } from './helpers/dataLoader';
-import React, { useCallback, useEffect, useState }  from 'react';
+import { loadData } from './helpers/dataLoader';
+import { useCallback, useEffect, useState }  from 'react';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { VictoryBar } from "victory";
-
+import {CategoryContext} from "./helpers/CategoryContext"
 
 function App() {
   var app_style={
       background: "#c4c4c4",
       height: "100vh",  
   }
-    
+
   // 讀取在背景的資料
-  const [allTasks, setAllTasks] = React.useState<Task[]>(loadData());
+  const [allTasks, setAllTasks] = useState<Task[]>(loadData());
 
   // 顯示的資料
-  const [displayTasks, setDisplayTasks] = React.useState<Task[]>([]);  
+  const [displayTasks, setDisplayTasks] = useState<Task[]>([]);  
 
   // 展開的計畫id
-  const [expandedProj, setexpandedProj] = React.useState<Task[]>([]);
-  const [curTask, setCurTask] = React.useState<Task>();
+  const [expandedProj, setexpandedProj] = useState<Task[]>([]);
+  const [curTask, setCurTask] = useState<Task>();
 
-  const [searchString, setSearchString] = React.useState<string>('');  
+  const [searchString, setSearchString] = useState<string>('');  
 
+  const [categoryName, setCategoryName] = useState<string>('20');
 
   // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
   const getProjects = useCallback(()=>{
@@ -50,7 +50,7 @@ function App() {
         if (allTasks[i].project === project.id) {
           tasks.push(allTasks[i]);
         };
-      }            
+      }
     }
     return tasks;
   }, [allTasks])
@@ -64,7 +64,7 @@ function App() {
   useEffect(()=> {    
     let diplayed: Task[] = [...getProjects()];      
     for (let p=0; p < expandedProj.length; ++p){
-      let temp: Task[] = getTasks(expandedProj[p]);        
+      let temp: Task[] = getTasks(expandedProj[p])
       Array.prototype.push.apply(diplayed, temp);
     }      
     setDisplayTasks(diplayed);
@@ -94,6 +94,7 @@ function App() {
 
   const changeEvent = (event: any) => {
     setexpandedProj([])    
+    setCategoryName(event.target.value)
     setAllTasks(loadData(event.target.value))    
   }
 
@@ -122,30 +123,11 @@ function App() {
   const resetDisplayedTask = ()=>{
     setDisplayTasks(getProjects());
   }
-  // const [myState , setMyState ] = useState<any>([
-  //   { x: 1, y: 2 },
-  //   { x: 2, y: 4 },
-  //   { x: 3, y: 7 },
-  //   { x: 4, y: 3 },
-  //   { x: 5, y: 5 }
-  // ]);
-
-  // const addNew = () => {
-  //   let newState = [...myState]
-  //   newState.push({
-  //     x: myState[myState.length - 1 ].x + 1,
-  //     y: myState[myState.length-1].y+1
-  //   })
-  //   setMyState(newState)
-  //   console.log(myState)    
-  // }
+  
   
   return (
-    <div className="App" style={app_style}>
-      {/* <button onClick={addNew}>add</button>
-      <VictoryBar 
-         data={myState}
-      /> */}
+    <CategoryContext.Provider value={categoryName}>
+      <div className="App" style={app_style}>
       <header className="App-header">
         <MyNav/>        
         <Row className="card-margin-top m-auto align-self-center">
@@ -154,45 +136,43 @@ function App() {
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
                   <div >                
-                  <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>                  
-                    <option value="20">20 Category</option>
-                    <option value="30">30 Category</option>
-                    <option value="40">40 Category</option>
-                  </Form.Select>
-                </div>
+                    <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>                  
+                      <option value="20">20 Category</option>
+                      <option value="30">30 Category</option>
+                      <option value="40">40 Category</option>
+                    </Form.Select>
+                  </div>
                 </Col>
                 <Col>
-                <InputGroup className="mb-3">
-                  <FormControl
-                    placeholder="Search"
-                    aria-label="Search"
-                    aria-describedby="Search"
-                    onChange={e=>setSearchString(e.target.value)}
-                  />
-                  <Button id="Search" variant="primary" onClick={()=>searchTaskName(searchString)}>
-                    Search
-                  </Button>
-                  <Button variant="dark" onClick={()=>resetDisplayedTask()}>
-                    Reset
-                  </Button>
-                </InputGroup>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      placeholder="Search"
+                      aria-label="Search"
+                      aria-describedby="Search"
+                      onChange={e=>setSearchString(e.target.value)}
+                    />
+                    <Button id="Search" variant="primary" onClick={()=>searchTaskName(searchString)}>
+                      Search
+                    </Button>
+                    <Button variant="dark" onClick={()=>resetDisplayedTask()}>
+                      Reset
+                    </Button>
+                  </InputGroup>
                 </Col>
               </Row>
-
               <Card.Body className="m-auto  align-self-center">                                                                                  
                 <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
-                {
-                  (displayTasks.length === 0 ? "empty": <Gantt
-                    tasks={displayTasks}
-                    viewMode={ViewMode.Month}          
-                    columnWidth={10}
-                    listCellWidth={""}                  
-                    TooltipContent={MyToolTipContent}
-                    onDoubleClick={handleExpanderClick}
-                    ganttHeight={550}
-                  />)
-                }
-                  
+                  {
+                    (displayTasks.length === 0 ? "empty": <Gantt
+                      tasks={displayTasks}
+                      viewMode={ViewMode.Month}          
+                      columnWidth={10}
+                      listCellWidth={""}                  
+                      TooltipContent={MyToolTipContent}
+                      onDoubleClick={handleExpanderClick}
+                      ganttHeight={550}
+                    />)
+                  }
                 </div>
               </Card.Body>
             </Card>
@@ -205,10 +185,13 @@ function App() {
                 />:null
               }
           </span>
-        </Row>        
+        </Row>
       </header>
     </div>
+    </CategoryContext.Provider>    
   );
 }
+
+
 
 export default App;

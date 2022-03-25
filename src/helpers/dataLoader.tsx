@@ -25,7 +25,7 @@ export function loadData(catNum: string = '20', prefixStr="revise_length_"){
     for (let i=0; i<data.length; ++i){        
         const temp = {
             start: new Date(data[i].start, 1, 1),
-            end: new Date(data[i].end, 1, 1),
+            end: new Date(data[i].end + 1, 1, 1),
             name: data[i].name,
             id: data[i].id,
             displayOrder: data[i].displayOrder,

@@ -1,16 +1,25 @@
-.tooltipDefaultContainer {
-    max-width: 75vw;
-    width: 500px;
-    margin-left: 25vw;
+.popBox {
+    max-width: 75vw;    
     max-height: 90vh;
-    background-color: #FFF;
+    height: 300px;
+    align-items: center;    
     padding: 7px;
     border-radius: 20px;
+    background-color: #FFF;        
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    
+}
+
+.popBoxImg {
+    width: 350px;
+}
+
+.barChart {
+    width: 500px;
 }
 
 
-.myInfo{
+.myInfo {
     max-width: 45vw;
     padding: 20px;
     /* height: 60vh; */
@@ -32,42 +41,3 @@
     overflow-y: scroll;
 }
 
-
-
-/* .tooltipDefaultContainer {
-    margin-left: 700px;
-    background: #fff;
-    
-   
-    width: auto;
-    max-width: 3200px;
-    
-    max-height: 80vw;
-       
-} */
-
-/* .tooltipDefaultContainerParagraph {
-    font-size: 12px;
-    margin-bottom: 6px;
-    color: #666;
-}
-
-.tooltipDetailsContainer {
-    position: absolute;
-    right: 100px;
-    display: flex;
-    flex-shrink: 0;
-    pointer-events: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-} */
-
-/* .tooltipDetailsContainerHidden {
-    visibility: hidden;
-    position: absolute;
-    display: flex;
-    pointer-events: none;
-} */
