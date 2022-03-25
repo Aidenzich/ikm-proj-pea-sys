@@ -157,7 +157,7 @@ def cleanAndSaveJsonWithOrder(filename):
 
         l_json = {
             "start":int(min(year_list)),
-            "end":int(max(year_list))+1,
+            "end":int(max(year_list)),
             "name":l,
             "id": project_id,
             "displayOrder": label_order,
@@ -174,8 +174,8 @@ def cleanAndSaveJsonWithOrder(filename):
         for _, row in label_df.iterrows():
             proj_id+=1
             p_json = {
-                "start": int(row['year']),
-                "end": int(row['year']) +1,
+                "start": int(row['year_start']),
+                "end": int(row['year_end']) if int(row['year_end']) < 110 else int(row['year_end']) + 1,
                 "name":row['name'],
                 "id":f"proj_{proj_id}",
                 "displayOrder":int(row['order']),
@@ -202,6 +202,9 @@ def cleanAndSaveJsonWithOrder(filename):
 if __name__ == '__main__':
     # cleanAndSaveJson('result20.csv')
     # cleanAndSaveJson('result30.csv')
-    cleanAndSaveJsonWithOrder('final40.csv')
-    cleanAndSaveJsonWithOrder('final20.csv')
-    cleanAndSaveJsonWithOrder('final30.csv')
+    # cleanAndSaveJsonWithOrder('final40.csv')
+    # cleanAndSaveJsonWithOrder('final20.csv')
+    # cleanAndSaveJsonWithOrder('final30.csv')
+    cleanAndSaveJsonWithOrder('revise_length_20.csv')
+    cleanAndSaveJsonWithOrder('revise_length_30.csv')
+    cleanAndSaveJsonWithOrder('revise_length_40.csv')

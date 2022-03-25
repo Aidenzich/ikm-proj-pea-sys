@@ -4,15 +4,17 @@ import { MyToolTipContent } from './components/myTooltip';
 import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
-import { loadData } from './helpers/dataLoader';
-import React, { useCallback, useEffect }  from 'react';
+import { loadData, testApexData } from './helpers/dataLoader';
+import React, { useCallback, useEffect, useState }  from 'react';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { VictoryBar } from "victory";
+
 
 function App() {
   var app_style={
-      background: "#f0f0f0",
+      background: "#c4c4c4",
       height: "100vh",  
   }
     
@@ -52,8 +54,6 @@ function App() {
     }
     return tasks;
   }, [allTasks])
-
-  
 
   useEffect(()=>{
     resetDisplayedTask();
@@ -98,7 +98,7 @@ function App() {
   }
 
   const searchTaskName = (searchInput: string) => {
-    let searchTasks = allTasks.filter(t=> t.name.includes(searchInput));
+    let searchTasks = allTasks.filter(t=> String(t.name).includes(searchInput));
     let searchTaskId: any[];
     let searchProjId: any[];
     searchProjId = [];
@@ -122,9 +122,30 @@ function App() {
   const resetDisplayedTask = ()=>{
     setDisplayTasks(getProjects());
   }
+  // const [myState , setMyState ] = useState<any>([
+  //   { x: 1, y: 2 },
+  //   { x: 2, y: 4 },
+  //   { x: 3, y: 7 },
+  //   { x: 4, y: 3 },
+  //   { x: 5, y: 5 }
+  // ]);
 
+  // const addNew = () => {
+  //   let newState = [...myState]
+  //   newState.push({
+  //     x: myState[myState.length - 1 ].x + 1,
+  //     y: myState[myState.length-1].y+1
+  //   })
+  //   setMyState(newState)
+  //   console.log(myState)    
+  // }
+  
   return (
     <div className="App" style={app_style}>
+      {/* <button onClick={addNew}>add</button>
+      <VictoryBar 
+         data={myState}
+      /> */}
       <header className="App-header">
         <MyNav/>        
         <Row className="card-margin-top m-auto align-self-center">
@@ -171,6 +192,7 @@ function App() {
                     ganttHeight={550}
                   />)
                 }
+                  
                 </div>
               </Card.Body>
             </Card>

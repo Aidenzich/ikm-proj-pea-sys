@@ -33,13 +33,13 @@ export const MyInfo: React.FC<{
         <Col>
               {
                 <div style={{textAlign: "left"}}>
-                  <Alert variant="success">
+                  {/* <Alert variant="success">
                     <Alert.Heading>NER</Alert.Heading>
                     <hr />
                     <p className="mb-0">
                       {task.data.ner}
                     </p>
-                  </Alert>
+                  </Alert> */}
                   <Alert variant="warning">
                     <Alert.Heading>Keyword</Alert.Heading>
                     <hr />
