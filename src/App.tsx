@@ -12,11 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {CategoryContext} from "./helpers/CategoryContext"
 
 function App() {
-  var app_style={
-      background: "#c4c4c4",
-      height: "100vh",  
-  }
-
   // 讀取在背景的資料
   const [allTasks, setAllTasks] = useState<Task[]>(loadData());
 
@@ -57,7 +52,6 @@ function App() {
 
   useEffect(()=>{
     resetDisplayedTask();
-    // setDisplayTasks(getProjects());
   }, [allTasks, getProjects]);
 
   // 控制展開項
@@ -124,15 +118,14 @@ function App() {
     setDisplayTasks(getProjects());
   }
   
-  
   return (
     <CategoryContext.Provider value={categoryName}>
-      <div className="App" style={app_style}>
+      <div className="App" >
       <header className="App-header">
-        <MyNav/>        
+        <MyNav/>
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>            
-            <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px", borderRadius: "20px",}}>
+            <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
                   <div >                
@@ -191,7 +184,5 @@ function App() {
     </CategoryContext.Provider>    
   );
 }
-
-
 
 export default App;

@@ -39,7 +39,7 @@ export function loadData(catNum: string = '20', prefixStr="revise_length_"){
                 fontSize:"32px",
                 rowHeight:100
             },
-            data: data[i]            
+            data: data[i]
         } as Task;
 
         tasks.push(temp);
@@ -72,77 +72,3 @@ export function loadData(catNum: string = '20', prefixStr="revise_length_"){
     }
     return tasks;
 }
-
-
-export function testApexData(){
-    let apexdata ={ 
-        series: [
-        {
-          name: 'Bob',
-          data: [
-            {
-              x: 'Design',
-              y: [
-                new Date('2019-03-05').getTime(),
-                new Date('2019-03-08').getTime()
-              ]
-            },
-            {
-              x: 'Code',
-              y: [
-                new Date('2019-03-08').getTime(),
-                new Date('2019-03-11').getTime()
-              ]
-            },
-            {
-              x: 'Test',
-              y: [
-                new Date('2019-03-11').getTime(),
-                new Date('2019-03-16').getTime()
-              ]
-            }
-          ]
-        },
-        {
-          name: 'Joe',
-          data: [
-            {
-              x: 'Design',
-              y: [
-                new Date('2019-03-02').getTime(),
-                new Date('2019-03-05').getTime()
-              ]
-            },
-            {
-              x: 'Code',
-              y: [
-                new Date('2019-03-06').getTime(),
-                new Date('2019-03-09').getTime()
-              ]
-            },
-            {
-              x: 'Test',
-              y: [
-                new Date('2019-03-10').getTime(),
-                new Date('2019-03-19').getTime()
-              ]
-            }
-          ]
-        }
-      ],
-      options: {
-        chart: {
-            height: 350,            
-          },
-          plotOptions: {
-            bar: {
-              horizontal: true
-            }
-        },
-      }
-    };
-  
-         
-    return apexdata;
-}
-{/* <Chart type="rangeBar" options={testApexData().options} series={testApexData().series}/> */}

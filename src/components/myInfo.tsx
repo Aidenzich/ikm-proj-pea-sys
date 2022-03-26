@@ -6,14 +6,12 @@ import styles from "./myComponents.module.css";
 export const MyInfo: React.FC<{
     task: any;
     setCurTask: Function;
-
 }> = ({ task, setCurTask}) => {
     if (task == undefined){
         return null;
     }
 
-    return (
-      
+    return (      
       <Row className={styles.myInfo} >
         <Row>
           <CloseButton 
@@ -33,13 +31,6 @@ export const MyInfo: React.FC<{
         <Col>
               {
                 <div style={{textAlign: "left"}}>
-                  {/* <Alert variant="success">
-                    <Alert.Heading>NER</Alert.Heading>
-                    <hr />
-                    <p className="mb-0">
-                      {task.data.ner}
-                    </p>
-                  </Alert> */}
                   <Alert variant="warning">
                     <Alert.Heading>Keyword</Alert.Heading>
                     <hr />
@@ -56,8 +47,7 @@ export const MyInfo: React.FC<{
                   </Alert>
                 </div>
             }
-        </Col>
-        
+        </Col>        
       </Row>
     );
   };
