@@ -11,7 +11,7 @@ const color_list = [
 const taskColor="#2E4E78";
 
 export function loadData(catNum: string = '20', prefixStr="revise_length_"){
-    var availableCatNumbers = ['20', '30', '40']
+    var availableCatNumbers = ['20', '30', '40', '50']
     if (availableCatNumbers.includes(catNum)){
         var data = require(`../data/main_${prefixStr}${catNum}.json`);    
         var proj_data = require(`../data/proj_${prefixStr}${catNum}.json`);
@@ -72,3 +72,8 @@ export function loadData(catNum: string = '20', prefixStr="revise_length_"){
     }
     return tasks;
 }
+
+
+export const testHtml = `
+    
+`

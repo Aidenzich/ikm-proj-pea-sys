@@ -107,8 +107,7 @@ def init_count_years(total_years: list):
 #         jf.write(p_jsonString)
 
 def cleanAndSaveJsonWithOrder(filename):
-    with open(DATA_PATH / "statistic.json") as file:
-    
+    with open(DATA_PATH / "statistic.json") as file:    
         count_data = json.load(file)    
     
     filepath = DATA_PATH / filename
@@ -200,6 +199,7 @@ def cleanAndSaveJsonWithOrder(filename):
 
 if __name__ == '__main__':
 
-    cleanAndSaveJsonWithOrder('revise_length_20.csv')
+    cleanAndSaveJsonWithOrder('revise_length_20.csv')    
     cleanAndSaveJsonWithOrder('revise_length_30.csv')
     cleanAndSaveJsonWithOrder('revise_length_40.csv')
+    cleanAndSaveJsonWithOrder('revise_length_50.csv')

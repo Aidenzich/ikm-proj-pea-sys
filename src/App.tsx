@@ -4,12 +4,13 @@ import { MyToolTipContent } from './components/myTooltip';
 import { MyInfo } from './components/myInfo';
 import { MyNav } from './components/myNav';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
-import { loadData } from './helpers/dataLoader';
+import { loadData, testHtml } from './helpers/dataLoader';
 import { useCallback, useEffect, useState }  from 'react';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {CategoryContext} from "./helpers/CategoryContext"
+
 
 function App() {
   // 讀取在背景的資料
@@ -104,8 +105,7 @@ function App() {
       }
       searchTaskId.push(searchTasks[i].id)
     }
-    
-    console.log(searchProjId)
+        
     let searchProj = allTasks.filter(p=> 
       searchProjId.includes(p.id) && !searchTaskId.includes(p.id)
     );
@@ -117,10 +117,18 @@ function App() {
   const resetDisplayedTask = ()=>{
     setDisplayTasks(getProjects());
   }
+  const iframe = '<iframe id="d" src="" width="1000" height="1000"  frameborder="0">'; 
   
+  function Iframe(props: any) {
+    return (<div dangerouslySetInnerHTML={ {__html:  testHtml}} />);
+  }
+  
+  
+
   return (
     <CategoryContext.Provider value={categoryName}>
       <div className="App" >
+      <Iframe iframe={iframe} />
       <header className="App-header">
         <MyNav/>
         <Row className="card-margin-top m-auto align-self-center">
@@ -133,6 +141,7 @@ function App() {
                       <option value="20">20 Category</option>
                       <option value="30">30 Category</option>
                       <option value="40">40 Category</option>
+                      <option value="50">50 Category</option>
                     </Form.Select>
                   </div>
                 </Col>
