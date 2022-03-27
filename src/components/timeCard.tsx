@@ -9,6 +9,7 @@ import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {CategoryContext} from "../helpers/CategoryContext"
 
+import Chart from "react-apexcharts";
 
 export const TimeCard = () => {
     // 讀取在背景的資料
@@ -25,25 +26,59 @@ export const TimeCard = () => {
 
     const [categoryName, setCategoryName] = useState<string>('20');
 
+    const [options, setOptions] = useState<any>({              
+        plotOptions: {
+          bar: {
+            horizontal: true
+          }
+        },
+        xaxis: {
+          categories: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
+        },
+        title: { text:'該類別各年份數量統計' }
+    })
+
+    const [countData, setCountData] = useState<any>();
     
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
     const getProjects = useCallback(()=>{
-    const temp = [];
-    for (var i=0; i< allTasks.length; i++){
-        if (allTasks[i].type === "project"){
-        temp.push(allTasks[i]);
-        }
-    }
-    return temp;
+      const temp = [];
+      for (var i=0; i< allTasks.length; i++){
+          if (allTasks[i].type === "project"){
+          temp.push(allTasks[i]);
+          }
+      }
+      return temp;
     }, [allTasks])
   
+    const getProjectsCount = useCallback(()=>{
+      let proj = getProjects();      
+      let allCount = []
+      let id = []      
+      for (let i=0; i < proj.length; i++){
+        let temp = proj[i] as any;
+        
+        id.push(temp.name)
+        allCount.push({
+          name: String(temp.name),
+          data : temp.data.series
+        })        
+      }
+      id.sort(function(a, b){return a - b})
+      console.log(id)
+      console.log(allCount)
+      setCountData(allCount)
+
+      // return allCount
+    }, [getProjects])
+
     // 以 project 取得底下的 task
     const getTasks = useCallback((project: Task): Task[] => {
         const tasks = [];
         if (project !== undefined){
         for (var i=0; i< allTasks.length; i++){
             if (allTasks[i].project === project.id) {
-            tasks.push(allTasks[i]);
+              tasks.push(allTasks[i]);
             };
         }
         }
@@ -53,6 +88,7 @@ export const TimeCard = () => {
 
     useEffect(()=>{
         resetDisplayedTask();
+        getProjectsCount();
     }, [allTasks, getProjects]);
 
     // 控制展開項
@@ -86,9 +122,11 @@ export const TimeCard = () => {
     };
 
     const changeEvent = (event: any) => {
+        setCountData([])
         setexpandedProj([])    
         setCategoryName(event.target.value)
-        setAllTasks(loadData(event.target.value))    
+        setAllTasks(loadData(event.target.value)) 
+        
     }
 
     const searchTaskName = (searchInput: string) => {
@@ -116,26 +154,30 @@ export const TimeCard = () => {
         setDisplayTasks(getProjects());
     }
 
-    const [isBertopic, setBertopic] = useState<boolean>(false);
-    const [topicFigWidth, setTopicFigWidth] = useState<number>(1000);
-    const [topicFigHeight, setTopicFigHeight] = useState<number>(500);
+    const [mode, setMode] = useState<String>("Gantt");
+    const [topicFigWidth, setTopicFigWidth] = useState<number>(1050);
+    const [topicFigHeight, setTopicFigHeight] = useState<number>(550);
     const [topicFig, setTopicFig] = useState<string>("test");
 
-    const toggleBertopic = ()=>{
-      setBertopic(!isBertopic)
+    const toggleBertopic = ()=>{      
+      setMode("BERTopic")
       setTopicFig("test")
-      setTopicFigWidth(1000)
-      setTopicFigHeight(500)
+      setTopicFigWidth(1050)
+      setTopicFigHeight(550)
     }
 
-    
+    const toggleTimeSeries = () => {
+      setMode("TS")
+    }
 
-    
+    const toggleGantt = () => {
+      setMode("Gantt")
+    }
 
     return (
         <CategoryContext.Provider value={categoryName}>
         <Row className="card-margin-top m-auto align-self-center">
-          <Col style={{paddingTop:'2vh'}}>            
+          <Col style={{paddingTop:'2vh'}}>
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
@@ -164,14 +206,20 @@ export const TimeCard = () => {
                     </Button>
                   </InputGroup>
                 </Col>
-                <Col xs={2}>
+                <Col xs={4}>
+                  <Button variant="info" onClick={()=>toggleGantt()} style={{color:"white"}}>
+                    Gantt
+                  </Button>
+                  <Button variant="info" onClick={()=>toggleTimeSeries()} style={{color:"white", margin:"3px"}}>
+                    Time Analysis
+                  </Button>
                   <Button variant="info" onClick={()=>toggleBertopic()} style={{color:"white"}}>
                     BERTopic
-                  </Button>
+                  </Button>                  
                 </Col>
               </Row>
               <Card.Body className="m-auto  align-self-center">
-                { isBertopic ? 
+                { mode == "BERTopic" ? 
                   <div >
                     <iframe 
                       src={process.env.PUBLIC_URL + "/" + topicFig + ".html"} 
@@ -181,16 +229,17 @@ export const TimeCard = () => {
                     <br/>
                     <Button variant="outline-info" onClick={() => {
                       setTopicFig("test")
-                      setTopicFigHeight(500)
-                      setTopicFigWidth(1000)
+                      setTopicFigWidth(1050)
+                      setTopicFigHeight(550)
+                      
                       }
                       }>
                       Bar Chart
                     </Button>                    
                     <Button variant="outline-info" onClick={()=>{
-                      setTopicFig("timeTopics")
-                      setTopicFigHeight(500)
-                      setTopicFigWidth(1000)
+                      setTopicFig("timeTopics")                      
+                      setTopicFigWidth(1050)
+                      setTopicFigHeight(550)
                     }}
                       style={{margin:"10px"}}
                     >
@@ -198,13 +247,16 @@ export const TimeCard = () => {
                     </Button>                    
                     <Button variant="outline-info" onClick={()=>{
                       setTopicFig("topics")
+                      setTopicFigWidth(900)
                       setTopicFigHeight(700)
-                      setTopicFigWidth(700)
+                      
                     }}>
                       Cluster
                     </Button>
-                  </div>  
-                  :
+                    
+                  </div> : null
+                }
+                { mode == "Gantt"? 
                   <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                     {
                       (displayTasks.length === 0 ? "empty": <Gantt
@@ -217,9 +269,18 @@ export const TimeCard = () => {
                         ganttHeight={550}
                       />)
                     }
-                  </div>
-                }                                                                              
-                
+                  </div> : null
+                }
+                { mode == "TS" ?
+                  <div>
+                    <Chart
+                      options={options}
+                      series={countData}
+                      type="line"
+                      width="1000"
+                    />
+                  </div> : null
+                }
                               
               </Card.Body>
             </Card>
