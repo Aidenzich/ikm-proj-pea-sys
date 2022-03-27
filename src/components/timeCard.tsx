@@ -181,30 +181,33 @@ export const TimeCard = () => {
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
-                  <div >                
+                  { mode == "Gantt" || mode == "TS"  ? <div >                
                     <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
                       <option value="20">20 Category</option>
                       <option value="30">30 Category</option>
                       <option value="40">40 Category</option>
                       <option value="50">50 Category</option>
                     </Form.Select>
-                  </div>
+                  </div> : null}                  
                 </Col>
                 <Col>
-                  <InputGroup className="mb-3">
-                    <FormControl
-                      placeholder="Search"
-                      aria-label="Search"
-                      aria-describedby="Search"
-                      onChange={e=>setSearchString(e.target.value)}
-                    />
-                    <Button id="Search" variant="primary" onClick={()=>searchTaskName(searchString)}>
-                      Search
-                    </Button>
-                    <Button variant="dark" onClick={()=>resetDisplayedTask()}>
-                      Reset
-                    </Button>
-                  </InputGroup>
+                  { mode == "Gantt" ? 
+                    <InputGroup className="mb-3">
+                      <FormControl
+                        placeholder="Search"
+                        aria-label="Search"
+                        aria-describedby="Search"
+                        onChange={e=>setSearchString(e.target.value)}
+                      />
+                      <Button id="Search" variant="primary" onClick={()=>searchTaskName(searchString)}>
+                        Search
+                      </Button>
+                      <Button variant="dark" onClick={()=>resetDisplayedTask()}>
+                        Reset
+                      </Button>
+                    </InputGroup>
+                  : null }
+                  
                 </Col>
                 <Col xs={4}>
                   <Button variant="info" onClick={()=>toggleGantt()} style={{color:"white"}}>
@@ -235,7 +238,7 @@ export const TimeCard = () => {
                       }
                       }>
                       Bar Chart
-                    </Button>                    
+                    </Button>
                     <Button variant="outline-info" onClick={()=>{
                       setTopicFig("timeTopics")                      
                       setTopicFigWidth(1050)
@@ -253,7 +256,7 @@ export const TimeCard = () => {
                     }}>
                       Cluster
                     </Button>
-                    
+                    <p> This result uses Bertopic and CKIP's bert-base-chinese-ws </p>
                   </div> : null
                 }
                 { mode == "Gantt"? 
