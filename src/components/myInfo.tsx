@@ -25,7 +25,9 @@ export const MyInfo: React.FC<{
         <Col xs={6}>
             <h5>計畫描述</h5>
             <div className={styles.desp}>
-                {task.data.desp}
+              <text>
+              {task.data.desp}
+              </text>                
             </div>
         </Col>
         <Col>
@@ -34,7 +36,7 @@ export const MyInfo: React.FC<{
                   <Alert variant="warning">
                     <Alert.Heading>Keyword</Alert.Heading>
                     <hr />
-                    <p className="mb-0">
+                    <p className="mb-0" style={{ overflowY: 'scroll', height:'200px'}}>
                       {task.data.keyword}
                     </p>
                   </Alert>
