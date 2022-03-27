@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState }  from 'react';
-import {Card, Row, Col, Form, InputGroup, FormControl, Button} from 'react-bootstrap';
+import { Card, Row, Col, Form, InputGroup, FormControl, Button} from 'react-bootstrap';
 import { MyToolTipContent } from './myTooltip';
 import { MyInfo } from './myInfo';
 import { Gantt, Task, ViewMode } from 'gantt-task-react';
@@ -25,6 +25,7 @@ export const TimeCard = () => {
 
     const [categoryName, setCategoryName] = useState<string>('20');
 
+    
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
     const getProjects = useCallback(()=>{
     const temp = [];
@@ -115,6 +116,22 @@ export const TimeCard = () => {
         setDisplayTasks(getProjects());
     }
 
+    const [isBertopic, setBertopic] = useState<boolean>(false);
+    const [topicFigWidth, setTopicFigWidth] = useState<number>(1000);
+    const [topicFigHeight, setTopicFigHeight] = useState<number>(500);
+    const [topicFig, setTopicFig] = useState<string>("test");
+
+    const toggleBertopic = ()=>{
+      setBertopic(!isBertopic)
+      setTopicFig("test")
+      setTopicFigWidth(1000)
+      setTopicFigHeight(500)
+    }
+
+    
+
+    
+
     return (
         <CategoryContext.Provider value={categoryName}>
         <Row className="card-margin-top m-auto align-self-center">
@@ -147,24 +164,67 @@ export const TimeCard = () => {
                     </Button>
                   </InputGroup>
                 </Col>
+                <Col xs={2}>
+                  <Button variant="info" onClick={()=>toggleBertopic()} style={{color:"white"}}>
+                    BERTopic
+                  </Button>
+                </Col>
               </Row>
-              <Card.Body className="m-auto  align-self-center">                                                                                  
-                <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
-                  {
-                    (displayTasks.length === 0 ? "empty": <Gantt
-                      tasks={displayTasks}
-                      viewMode={ViewMode.Month}          
-                      columnWidth={10}
-                      listCellWidth={""}                  
-                      TooltipContent={MyToolTipContent}
-                      onDoubleClick={handleExpanderClick}
-                      ganttHeight={550}
-                    />)
-                  }
-                </div>
+              <Card.Body className="m-auto  align-self-center">
+                { isBertopic ? 
+                  <div >
+                    <iframe 
+                      src={process.env.PUBLIC_URL + "/" + topicFig + ".html"} 
+                      width={topicFigWidth} 
+                      height={topicFigHeight}
+                    ></iframe>
+                    <br/>
+                    <Button variant="outline-info" onClick={() => {
+                      setTopicFig("test")
+                      setTopicFigHeight(500)
+                      setTopicFigWidth(1000)
+                      }
+                      }>
+                      Bar Chart
+                    </Button>                    
+                    <Button variant="outline-info" onClick={()=>{
+                      setTopicFig("timeTopics")
+                      setTopicFigHeight(500)
+                      setTopicFigWidth(1000)
+                    }}
+                      style={{margin:"10px"}}
+                    >
+                      Topics over Time
+                    </Button>                    
+                    <Button variant="outline-info" onClick={()=>{
+                      setTopicFig("topics")
+                      setTopicFigHeight(700)
+                      setTopicFigWidth(700)
+                    }}>
+                      Cluster
+                    </Button>
+                  </div>  
+                  :
+                  <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
+                    {
+                      (displayTasks.length === 0 ? "empty": <Gantt
+                        tasks={displayTasks}
+                        viewMode={ViewMode.Month}          
+                        columnWidth={10}
+                        listCellWidth={""}                  
+                        TooltipContent={MyToolTipContent}
+                        onDoubleClick={handleExpanderClick}
+                        ganttHeight={550}
+                      />)
+                    }
+                  </div>
+                }                                                                              
+                
+                              
               </Card.Body>
             </Card>
           </Col>
+          
           <span>
               {
                 (curTask != null && curTask.type==="task")? <MyInfo
