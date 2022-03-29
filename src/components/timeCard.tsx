@@ -24,7 +24,7 @@ export const TimeCard = () => {
 
     const [searchString, setSearchString] = useState<string>('');  
 
-    const [categoryName, setCategoryName] = useState<string>('20');
+    const [categoryName, setCategoryName] = useState<string>('10');
 
     const [options, setOptions] = useState<any>({              
         plotOptions: {
@@ -183,6 +183,7 @@ export const TimeCard = () => {
                 <Col>
                   { mode == "Gantt" || mode == "TS"  ? <div >                
                     <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
+                      <option value="10">10 Category</option>
                       <option value="20">20 Category</option>
                       <option value="30">30 Category</option>
                       <option value="40">40 Category</option>

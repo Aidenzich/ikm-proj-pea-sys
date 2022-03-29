@@ -11,6 +11,7 @@ export const MyInfo: React.FC<{
         return null;
     }
 
+    // https://stackoverflow.com/questions/35351706/how-to-render-a-multi-line-text-string-in-react
     return (      
       <Row className={styles.myInfo} >
         <Row>
@@ -26,8 +27,9 @@ export const MyInfo: React.FC<{
             <h5>計畫描述</h5>
             <div className={styles.desp}>
               <text>
+              
               {task.data.desp}
-              </text>                
+              </text>
             </div>
         </Col>
         <Col>

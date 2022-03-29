@@ -198,7 +198,7 @@ def cleanAndSaveJsonWithOrder(filename):
 
 
 if __name__ == '__main__':
-
+    cleanAndSaveJsonWithOrder('revise_length_10.csv')
     cleanAndSaveJsonWithOrder('revise_length_20.csv')    
     cleanAndSaveJsonWithOrder('revise_length_30.csv')
     cleanAndSaveJsonWithOrder('revise_length_40.csv')
