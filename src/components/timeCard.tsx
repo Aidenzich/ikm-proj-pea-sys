@@ -231,7 +231,7 @@ export const TimeCard = () => {
                       width={topicFigWidth} 
                       height={topicFigHeight}
                     ></iframe>
-                    <br/> g
+                    <br/>
                     <Button variant="outline-info" onClick={() => {
                       setTopicFig(TopicHtmls[0])
                       setTopicFigWidth(1050)
