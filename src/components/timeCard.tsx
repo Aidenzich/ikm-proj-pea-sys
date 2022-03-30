@@ -157,11 +157,12 @@ export const TimeCard = () => {
     const [mode, setMode] = useState<String>("Gantt");
     const [topicFigWidth, setTopicFigWidth] = useState<number>(1050);
     const [topicFigHeight, setTopicFigHeight] = useState<number>(550);
-    const [topicFig, setTopicFig] = useState<string>("test");
-
+    const TopicHtmls = ["bar_fig", "tot_fig", "topic_fig"]
+    const [topicFig, setTopicFig] = useState<string>(TopicHtmls[0]);
+    
     const toggleBertopic = ()=>{      
       setMode("BERTopic")
-      setTopicFig("test")
+      
       setTopicFigWidth(1050)
       setTopicFigHeight(550)
     }
@@ -230,9 +231,9 @@ export const TimeCard = () => {
                       width={topicFigWidth} 
                       height={topicFigHeight}
                     ></iframe>
-                    <br/>
+                    <br/> g
                     <Button variant="outline-info" onClick={() => {
-                      setTopicFig("test")
+                      setTopicFig(TopicHtmls[0])
                       setTopicFigWidth(1050)
                       setTopicFigHeight(550)
                       
@@ -241,7 +242,7 @@ export const TimeCard = () => {
                       Bar Chart
                     </Button>
                     <Button variant="outline-info" onClick={()=>{
-                      setTopicFig("timeTopics")                      
+                      setTopicFig(TopicHtmls[1])
                       setTopicFigWidth(1050)
                       setTopicFigHeight(550)
                     }}
@@ -250,8 +251,8 @@ export const TimeCard = () => {
                       Topics over Time
                     </Button>                    
                     <Button variant="outline-info" onClick={()=>{
-                      setTopicFig("topics")
-                      setTopicFigWidth(900)
+                      setTopicFig(TopicHtmls[2])
+                      setTopicFigWidth(1050)
                       setTopicFigHeight(700)
                       
                     }}>
