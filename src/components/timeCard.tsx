@@ -12,6 +12,7 @@ import {CategoryContext} from "../helpers/CategoryContext"
 import Chart from "react-apexcharts";
 
 export const TimeCard = () => {
+    console.log(ViewMode)
     // 讀取在背景的資料
     const [allTasks, setAllTasks] = useState<Task[]>(loadData());
 
@@ -219,7 +220,7 @@ export const TimeCard = () => {
         <CategoryContext.Provider value={categoryName}>
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>
-            <Card className="m-auto" style={{ width:"auto", maxWidth:"1300px"}}>
+            <Card className="m-auto" style={{ width:"auto", maxWidth:"1400px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
                   { mode === "Gantt" || mode === "TS"  ? <div >                
@@ -305,7 +306,8 @@ export const TimeCard = () => {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
-                        columnWidth={11}
+                        columnWidth={19}
+                        handleWidth={40}
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}
                         onDoubleClick={handleExpanderClick}
