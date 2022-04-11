@@ -39,7 +39,7 @@ export const TimeCard = () => {
     })
     
     const [countData, setCountData] = useState<any>();
-    const [extendGantt, setExtendGantt] = useState<boolean>(false);
+    const [extendGantt, setExtendGantt] = useState<boolean>(true);
 
     const toggleGanttSetting = (input: boolean = false)=>{
       if (input){
@@ -53,7 +53,7 @@ export const TimeCard = () => {
       }
     }
 
-    const [ganttSetting, setGanttSetting] = useState<any>(toggleGanttSetting());
+    const [ganttSetting, setGanttSetting] = useState<any>(toggleGanttSetting(true));
     
     console.log(ganttSetting)
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
