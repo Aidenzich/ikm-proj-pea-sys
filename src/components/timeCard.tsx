@@ -130,16 +130,27 @@ export const TimeCard = () => {
     }
 
     const searchTaskName = (searchInput: string) => {
-        let searchTasks = allTasks.filter(t=> String(t.name).includes(searchInput));
+        const conditions = searchInput.split(',');
+        let searchTasks: Task[] = [];
+
+        for (let c=0; c<conditions.length; ++c){
+          if (conditions[c].includes("!")){
+            console.log(conditions[c])
+            searchTasks = searchTasks.filter(t=> !String(t.name).includes(conditions[c].replace('!','')));
+          } else {
+            searchTasks = searchTasks.concat(allTasks.filter(t=> String(t.name).includes(conditions[c])));
+          }          
+        }
+        console.log(searchTasks)
         let searchTaskId: any[];
         let searchProjId: any[];
         searchProjId = [];
         searchTaskId = [];
         for (let i=0; i< searchTasks.length; ++i){
-        if (!searchProjId.includes(searchTasks[i].project)){
-            searchProjId.push(searchTasks[i].project)
-        }
-        searchTaskId.push(searchTasks[i].id)
+          if (!searchProjId.includes(searchTasks[i].project)){
+              searchProjId.push(searchTasks[i].project)
+          }
+          searchTaskId.push(searchTasks[i].id)
         }
             
         let searchProj = allTasks.filter(p=> 
@@ -182,7 +193,7 @@ export const TimeCard = () => {
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
-                  { mode == "Gantt" || mode == "TS"  ? <div >                
+                  { mode === "Gantt" || mode === "TS"  ? <div >                
                     <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
                       <option value="10">10 Category</option>
                       <option value="20">20 Category</option>
@@ -193,7 +204,7 @@ export const TimeCard = () => {
                   </div> : null}                  
                 </Col>
                 <Col>
-                  { mode == "Gantt" ? 
+                  { mode === "Gantt" ? 
                     <InputGroup className="mb-3">
                       <FormControl
                         placeholder="Search"
@@ -224,7 +235,7 @@ export const TimeCard = () => {
                 </Col>
               </Row>
               <Card.Body className="m-auto  align-self-center">
-                { mode == "BERTopic" ? 
+                { mode === "BERTopic" ? 
                   <div >
                     <iframe 
                       src={process.env.PUBLIC_URL + "/" + topicFig + ".html"} 
@@ -261,7 +272,7 @@ export const TimeCard = () => {
                     <p> This result uses Bertopic and CKIP's bert-base-chinese-ws </p>
                   </div> : null
                 }
-                { mode == "Gantt"? 
+                { mode === "Gantt"? 
                   <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                     {
                       (displayTasks.length === 0 ? "empty": <Gantt
@@ -276,7 +287,7 @@ export const TimeCard = () => {
                     }
                   </div> : null
                 }
-                { mode == "TS" ?
+                { mode === "TS" ?
                   <div>
                     <Chart
                       options={options}
