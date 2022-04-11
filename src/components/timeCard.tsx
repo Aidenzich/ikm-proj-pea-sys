@@ -306,7 +306,7 @@ export const TimeCard = () => {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
-                        columnWidth={19}
+                        columnWidth={25}
                         handleWidth={40}
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}
