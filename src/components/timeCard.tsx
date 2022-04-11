@@ -102,7 +102,7 @@ export const TimeCard = () => {
     useEffect(()=>{
       if (extendGantt){
         setGanttSetting({
-          "columnWidth":10
+          "columnWidth":12
         });
       } else {
         setGanttSetting({
