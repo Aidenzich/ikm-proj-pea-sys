@@ -11,8 +11,7 @@ import {CategoryContext} from "../helpers/CategoryContext"
 
 import Chart from "react-apexcharts";
 
-export const TimeCard = () => {
-    console.log(ViewMode)
+export const TimeCard = () => {    
     // 讀取在背景的資料
     const [allTasks, setAllTasks] = useState<Task[]>(loadData());
 
@@ -38,9 +37,25 @@ export const TimeCard = () => {
         },
         title: { text:'該類別各年份數量統計' }
     })
-
-    const [countData, setCountData] = useState<any>();
     
+    const [countData, setCountData] = useState<any>();
+    const [extendGantt, setExtendGantt] = useState<boolean>(false);
+
+    const toggleGanttSetting = (input: boolean = false)=>{
+      if (input){
+        return {
+          "columnWidth":10
+        }
+      } else {
+        return {
+          "columnWidth":30
+        }
+      }
+    }
+
+    const [ganttSetting, setGanttSetting] = useState<any>(toggleGanttSetting());
+    
+    console.log(ganttSetting)
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
     const getProjects = useCallback(()=>{
       const temp = [];
@@ -84,6 +99,17 @@ export const TimeCard = () => {
         return tasks;
     }, [allTasks])
 
+    useEffect(()=>{
+      if (extendGantt){
+        setGanttSetting({
+          "columnWidth":10
+        });
+      } else {
+        setGanttSetting({
+          "columnWidth":30
+        });
+      }
+    }, [extendGantt])
 
     useEffect(()=>{
         resetDisplayedTask();
@@ -149,7 +175,7 @@ export const TimeCard = () => {
           // console.log(searchArray[i]);
         }
 
-        console.log(searchKeys)
+        
         
         let searchTasks: Task[] = allTasks;
         // step1. search and 
@@ -253,6 +279,9 @@ export const TimeCard = () => {
                   
                 </Col>
                 <Col xs={4}>
+                  <Button variant="warning" onClick={()=>setExtendGantt(!extendGantt)} style={{  margin:"3px"}}>
+                    Switch
+                  </Button>
                   <Button variant="info" onClick={()=>toggleGantt()} style={{color:"white"}}>
                     Gantt
                   </Button>
@@ -306,8 +335,8 @@ export const TimeCard = () => {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
-                        columnWidth={25}
-                        handleWidth={40}
+                        columnWidth={ganttSetting.columnWidth}
+                        handleWidth={40}                      
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}
                         onDoubleClick={handleExpanderClick}
