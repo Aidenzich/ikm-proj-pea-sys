@@ -58,7 +58,10 @@ export const MyToolTipContent: React.FC<{
       <div>        
         {
         checkDataSeries(task) ?
-        <Row className={styles.popBox} style={style}>           
+        <Row className={styles.popBox} style={style}>
+          <h5>
+            {task.name}
+          </h5>
           <Col className={styles.barChart}>
             <Chart type="bar" options={state.options} series={state.series}/>
           </Col>

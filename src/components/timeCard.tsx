@@ -219,7 +219,7 @@ export const TimeCard = () => {
         <CategoryContext.Provider value={categoryName}>
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>
-            <Card className="m-auto" style={{ width:"auto", maxWidth:"1200px"}}>
+            <Card className="m-auto" style={{ width:"auto", maxWidth:"1300px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
                   { mode === "Gantt" || mode === "TS"  ? <div >                
@@ -305,7 +305,7 @@ export const TimeCard = () => {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
-                        columnWidth={10}
+                        columnWidth={11}
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}
                         onDoubleClick={handleExpanderClick}
