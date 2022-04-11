@@ -1,7 +1,7 @@
 .popBox {
-    max-width: 75vw;    
+    max-width: 50vw;    
     max-height: 90vh;
-    height: 400px;
+    height: 350px;
     align-items: center;    
     padding: 7px;
     
@@ -15,7 +15,7 @@
 }
 
 .barChart {
-    width: 500px;
+    width: 400px;
 }
 
 

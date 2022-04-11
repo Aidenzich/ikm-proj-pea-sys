@@ -59,13 +59,14 @@ export const MyToolTipContent: React.FC<{
         {
         checkDataSeries(task) ?
         <Row className={styles.popBox} style={style}>
-          <h5>
-            {task.name}
-          </h5>
-          <Col className={styles.barChart}>
-            <Chart type="bar" options={state.options} series={state.series}/>
+          
+          <Col >
+            <Chart className={styles.barChart} type="bar" options={state.options} series={state.series}/>
           </Col>
           <Col >
+          <p className={styles.popBoxImg}>
+            {task.name}
+          </p>
             <img className={styles.popBoxImg} src={require('./wordcloud/category' + category + '/' + task.id.replace("main_", "") +'.png')} />
           </Col>
         </Row> : undefined
