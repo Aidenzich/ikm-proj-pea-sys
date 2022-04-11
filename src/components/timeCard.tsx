@@ -45,7 +45,7 @@ export const TimeCard = () => {
       const temp = [];
       for (var i=0; i< allTasks.length; i++){
           if (allTasks[i].type === "project"){
-          temp.push(allTasks[i]);
+            temp.push(allTasks[i]);
           }
       }
       return temp;
@@ -128,23 +128,49 @@ export const TimeCard = () => {
     }
 
     const searchTaskName = (searchInput: string) => {
-        let notPrefix ="not", andPrefix = "and";
-        const conditions = searchInput.split(andPrefix);
-        
-        for (let i=0; i<conditions.length; ++i ) conditions[i]=conditions[i].replace(/\s/g, '');
+        let notPrefix="not", andPrefix="and", orPrefix="or";        
+        let searchKeys = {} as any;
+        let prefixs = [andPrefix, notPrefix, orPrefix];
+        searchKeys[notPrefix] = [];
+        searchKeys[andPrefix] = [];
+        searchKeys[orPrefix] = [];
 
-        let searchTasks: Task[] = [];
-        
-        for (let c=0; c<conditions.length; ++c){
-          
-          if (conditions[c].includes(notPrefix)){
-            if (searchTasks.length === 0 && conditions.length === 1) searchTasks = allTasks;
-            searchTasks = searchTasks.filter(t=> !String(t.name).includes(conditions[c].replace(notPrefix,'')));
-          } else {
-            searchTasks = searchTasks.concat(allTasks.filter(t=> String(t.name).includes(conditions[c])));
-          }          
+        let searchArray = searchInput.replace(/\s\s+/g, ' ').split(' ');
+        // 生技 and 藥 or 氣候 not 政策
+        console.log(searchArray);
+        for (let i=0; i<searchArray.length; ++i){
+          if ( i === 0 ){
+            searchKeys[andPrefix].push(searchArray[i]); continue;
+          };
+          if (prefixs.includes(searchArray[i])){
+            searchKeys[searchArray[i]].push(searchArray[++i]);
+          }
+          // console.log(searchArray[i]);
         }
+
+        console.log(searchKeys)
         
+        let searchTasks: Task[] = allTasks;
+        // step1. search and 
+        function andSearch(t:Task){          
+          for (let i=0; i<searchKeys[andPrefix].length; ++i){
+            if (!String(t.name).includes(searchKeys[andPrefix][i])) return false;
+            // result = String(t.name).includes(separators[andPrefix][i]);
+          }
+          return true;
+        }
+        searchTasks = searchTasks.filter(andSearch);
+        
+        // step2. search or
+        for (let i=0; i< searchKeys[orPrefix].length; ++i){
+          searchTasks = searchTasks.concat(allTasks.filter(t=> String(t.name).includes(searchKeys[orPrefix][i])));
+        }
+
+        // step3. exclude not
+        for (let i=0; i< searchKeys[notPrefix].length; ++i){
+          searchTasks = searchTasks.filter(t=> !String(t.name).includes(searchKeys[notPrefix][i]));
+        }
+                
         let searchTaskId: any[];
         let searchProjId: any[];
         searchProjId = [];

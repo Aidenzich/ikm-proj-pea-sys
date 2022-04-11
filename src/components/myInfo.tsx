@@ -26,10 +26,10 @@ export const MyInfo: React.FC<{
         <Col xs={6}>
             <h5>計畫描述</h5>
             <div className={styles.desp}>
-              <text>
+              <p>
               
               {task.data.desp}
-              </text>
+              </p>
             </div>
         </Col>
         <Col>
