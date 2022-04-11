@@ -64,9 +64,7 @@ export const TimeCard = () => {
           data : temp.data.series
         })        
       }
-      id.sort(function(a, b){return a - b})
-      console.log(id)
-      console.log(allCount)
+      id.sort(function(a, b){return a - b})      
       setCountData(allCount)
 
       // return allCount
@@ -130,18 +128,23 @@ export const TimeCard = () => {
     }
 
     const searchTaskName = (searchInput: string) => {
-        const conditions = searchInput.split(',');
-        let searchTasks: Task[] = [];
+        let notPrefix ="not", andPrefix = "and";
+        const conditions = searchInput.split(andPrefix);
+        
+        for (let i=0; i<conditions.length; ++i ) conditions[i]=conditions[i].replace(/\s/g, '');
 
+        let searchTasks: Task[] = [];
+        
         for (let c=0; c<conditions.length; ++c){
-          if (conditions[c].includes("!")){
-            console.log(conditions[c])
-            searchTasks = searchTasks.filter(t=> !String(t.name).includes(conditions[c].replace('!','')));
+          
+          if (conditions[c].includes(notPrefix)){
+            if (searchTasks.length === 0 && conditions.length === 1) searchTasks = allTasks;
+            searchTasks = searchTasks.filter(t=> !String(t.name).includes(conditions[c].replace(notPrefix,'')));
           } else {
             searchTasks = searchTasks.concat(allTasks.filter(t=> String(t.name).includes(conditions[c])));
           }          
         }
-        console.log(searchTasks)
+        
         let searchTaskId: any[];
         let searchProjId: any[];
         searchProjId = [];
@@ -246,9 +249,7 @@ export const TimeCard = () => {
                     <Button variant="outline-info" onClick={() => {
                       setTopicFig(TopicHtmls[0])
                       setTopicFigWidth(1050)
-                      setTopicFigHeight(550)
-                      
-                      }
+                      setTopicFigHeight(550)}
                       }>
                       Bar Chart
                     </Button>
@@ -272,14 +273,14 @@ export const TimeCard = () => {
                     <p> This result uses Bertopic and CKIP's bert-base-chinese-ws </p>
                   </div> : null
                 }
-                { mode === "Gantt"? 
+                { mode === "Gantt" ? 
                   <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
                     {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
-                        viewMode={ViewMode.Month}          
+                        viewMode={ViewMode.Month}
                         columnWidth={10}
-                        listCellWidth={""}                  
+                        listCellWidth={""}
                         TooltipContent={MyToolTipContent}
                         onDoubleClick={handleExpanderClick}
                         ganttHeight={550}
