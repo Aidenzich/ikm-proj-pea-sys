@@ -330,7 +330,7 @@ export const TimeCard = () => {
                   </div> : null
                 }
                 { mode === "Gantt" ? 
-                  <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"90vw"}}>
+                  <div className="p-auto" style={{width:"auto", minWidth:"100eh", maxWidth:"1350px"}}>
                     {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
