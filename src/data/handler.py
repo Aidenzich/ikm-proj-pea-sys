@@ -61,7 +61,8 @@ def cleanAndSaveJsonWithOrder(filename):
         # 取出該類別計畫各年份比數計算
         # for y in temp_year_count.keys():        
         #     count_years[int(y)] = int(temp_year_count[y])
-
+        print(label_name_list)
+        
         l_json = {
             "start":int(min(year_list)),
             "end": 110,
