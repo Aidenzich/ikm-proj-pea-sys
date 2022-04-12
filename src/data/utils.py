@@ -38,7 +38,7 @@ def get_name_dict(filename):
             iline += 1
             newvalue = lines[iline].replace("\n", "")
             if newvalue == "不須修改":
-                newvalue = research
+                newvalue = key
 
             trans_dict[key] = newvalue
             
