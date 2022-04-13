@@ -1,3 +1,3 @@
-import React, { useState, createContext, useMemo } from 'react';
+import { createContext } from 'react';
 
 export const CategoryContext = createContext("");

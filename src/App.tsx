@@ -1,5 +1,5 @@
 import { MyNav } from './components/myNav';
-import { TimeCard } from './components/timeCard';
+import { GanttCard } from './components/ganttCard';
 import './App.css';
 import "gantt-task-react/dist/index.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,7 +10,7 @@ function App() {
     <div className="App" >
       <header className="App-header"></header>
       <MyNav/>      
-      <TimeCard></TimeCard>
+      <GanttCard></GanttCard>
     </div>    
   );
 }

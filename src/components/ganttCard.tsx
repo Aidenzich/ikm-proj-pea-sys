@@ -11,10 +11,10 @@ import {CategoryContext} from "../helpers/CategoryContext"
 
 import Chart from "react-apexcharts";
 
-export const TimeCard = () => {    
+export const GanttCard = () => {    
     // 讀取在背景的資料
     const [allTasks, setAllTasks] = useState<Task[]>(loadData());
-
+            
     // 顯示的資料
     const [displayTasks, setDisplayTasks] = useState<Task[]>([]);  
 
@@ -26,7 +26,7 @@ export const TimeCard = () => {
 
     const [categoryName, setCategoryName] = useState<string>('10');
 
-    const [options, setOptions] = useState<any>({              
+    const [options, ] = useState<any>({              
         plotOptions: {
           bar: {
             horizontal: true
@@ -41,19 +41,8 @@ export const TimeCard = () => {
     const [countData, setCountData] = useState<any>();
     const [extendGantt, setExtendGantt] = useState<boolean>(true);
 
-    const toggleGanttSetting = (input: boolean = false)=>{
-      if (input){
-        return {
-          "columnWidth":10
-        }
-      } else {
-        return {
-          "columnWidth":30
-        }
-      }
-    }
 
-    const [ganttSetting, setGanttSetting] = useState<any>(toggleGanttSetting(true));
+    const [ganttColumnWidth, setGanttColumnWidth] = useState<number>(10);
     
     
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
@@ -101,17 +90,14 @@ export const TimeCard = () => {
 
     useEffect(()=>{
       if (extendGantt){
-        setGanttSetting({
-          "columnWidth":12
-        });
+        setGanttColumnWidth(10);
       } else {
-        setGanttSetting({
-          "columnWidth":30
-        });
+        setGanttColumnWidth(25);
       }
     }, [extendGantt])
 
     useEffect(()=>{
+        setSearchString("");
         resetDisplayedTask();
         getProjectsCount();
     }, [allTasks, getProjects]);
@@ -218,7 +204,9 @@ export const TimeCard = () => {
     }
 
     const resetDisplayedTask = ()=>{
-        setDisplayTasks(getProjects());
+      
+      setSearchString('');
+      setDisplayTasks(getProjects());
     }
 
     const [mode, setMode] = useState<String>("Gantt");
@@ -249,46 +237,63 @@ export const TimeCard = () => {
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1400px"}}>
               <Row style={{margin:"20px 0px 10px 40px"}}>
                 <Col>
-                  { mode === "Gantt" || mode === "TS"  ? <div >                
-                    <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
-                      <option value="10">10 Category</option>
-                      <option value="20">20 Category</option>
-                      <option value="30">30 Category</option>
-                      <option value="40">40 Category</option>
-                      <option value="50">50 Category</option>
-                    </Form.Select>
-                  </div> : null}                  
+                  { mode === "Gantt" || mode === "TS"  ? <Row>                    
+                    <Col>
+                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
+                        <option value="10">10 Category</option>
+                        <option value="20">20 Category</option>
+                        <option value="30">30 Category</option>
+                        <option value="40">40 Category</option>
+                        <option value="50">50 Category</option>
+                      </Form.Select>
+                    </Col>
+                    {/* <Col>
+                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
+                          <option value="10">未設定部會</option>
+                          <option value="20">部會1</option>
+                          <option value="20">部會2</option>
+                          <option value="20">部會3</option>                    
+                      </Form.Select>
+                    </Col> */}
+                  </Row> : null}
                 </Col>
                 <Col>
                   { mode === "Gantt" ? 
                     <InputGroup className="mb-3">
-                      <FormControl
+                      
+                      <FormControl                        
                         placeholder="Search"
                         aria-label="Search"
                         aria-describedby="Search"
+                        value={searchString}
                         onChange={e=>setSearchString(e.target.value)}
                       />
                       <Button id="Search" variant="primary" onClick={()=>searchTaskName(searchString)}>
                         Search
                       </Button>
-                      <Button variant="dark" onClick={()=>resetDisplayedTask()}>
+                      <Button variant="dark" onClick={e=>{ resetDisplayedTask();
+                        
+                      }}>
                         Reset
                       </Button>
+                      
                     </InputGroup>
                   : null }
                   
                 </Col>
                 <Col xs={4}>
-                  <Button variant="warning" onClick={()=>setExtendGantt(!extendGantt)} style={{  margin:"3px"}}>
+                  { mode === "Gantt" ? <Button variant="warning" onClick={()=>setExtendGantt(!extendGantt)} style={{  margin:"3px"}}>
                     Switch
-                  </Button>
-                  <Button variant="info" onClick={()=>toggleGantt()} style={{color:"white"}}>
+                  </Button> : null
+                  }
+                  
+                  <Button variant="info" onClick={()=>toggleGantt()} style={{color:"white"}} disabled={ mode==="Gantt" }>
                     Gantt
                   </Button>
-                  <Button variant="info" onClick={()=>toggleTimeSeries()} style={{color:"white", margin:"3px"}}>
+                  <Button variant="info" onClick={()=>toggleTimeSeries()} style={{color:"white", margin:"3px"}} disabled={ mode==="TS" }>
                     Time Analysis
                   </Button>
-                  <Button variant="info" onClick={()=>toggleBertopic()} style={{color:"white"}}>
+                  <Button variant="info" onClick={()=>toggleBertopic()} style={{color:"white"}} disabled={ mode==="BERTopic" }>
                     BERTopic
                   </Button>                  
                 </Col>
@@ -335,7 +340,7 @@ export const TimeCard = () => {
                       (displayTasks.length === 0 ? "empty": <Gantt
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
-                        columnWidth={ganttSetting.columnWidth}
+                        columnWidth={ganttColumnWidth}
                         handleWidth={40}                      
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}

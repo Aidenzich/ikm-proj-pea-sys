@@ -16,7 +16,7 @@ def get_num_dict(filename):
             if newvalue == "不須修改":
                 newvalue = lines[iline-1].replace(research.group(), '').replace(' ', '').replace('（原本的類別名稱）', '').replace("\n", "").replace('.', '')
 
-            trans_dict[research.group()] = newvalue
+            trans_dict[research.group()]['name'] = newvalue
             
         iline += 1
     
@@ -40,7 +40,7 @@ def get_name_dict(filename):
             if newvalue == "不須修改":
                 newvalue = key
 
-            trans_dict[key] = newvalue
+            trans_dict[key]['name'] = newvalue
             
         iline += 1
     
