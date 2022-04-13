@@ -32,7 +32,7 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 
-## Handle Data
+## Handle Gantt Data
 - 甘特圖所需資料，請在cmd使用以下指令將資料轉成json格式方便讀取
 ```sh
 python src/data/handler.py
@@ -48,10 +48,15 @@ if __name__ == '__main__':
     # cleanAndSaveJsonWithOrder('<csvfile_you_want_to_read>')
 ```
 
+## Handle BERTopic
+-  請參見helloBertopic 資料夾，將產生的檔案放入public資料夾中，請確定名稱與原始設定相符。
+
 ## Deploy
-```
-git reset --hard origin
-git pull
-npm run build
-cp -r ./build/* ~/../../var/www/html
-```
+- `npm run build` 將輸出之`build`資料夾檔案根據網站伺服器架設之方式放入對應的資料夾中
+- 以下程式碼與`deploy.sh`為成大IKM實驗室，內部架設示範，以`nginx`為例
+    ```
+    git reset --hard origin
+    git pull
+    npm run build
+    cp -r ./build/* ~/../../var/www/html
+    ```
