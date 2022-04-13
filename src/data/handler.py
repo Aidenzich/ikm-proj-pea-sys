@@ -47,7 +47,7 @@ def cleanAndSaveJsonWithOrder(filename):
     category_num = int(re.search(r'\d+', filename).group())
     TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
     proj_id = 0    
-    
+    df['order'] +=1
 
     # 類別資料
     for idx, l in enumerate(label_list):        

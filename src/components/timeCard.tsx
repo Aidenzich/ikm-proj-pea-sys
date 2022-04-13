@@ -55,7 +55,7 @@ export const TimeCard = () => {
 
     const [ganttSetting, setGanttSetting] = useState<any>(toggleGanttSetting(true));
     
-    console.log(ganttSetting)
+    
     // 只有在更換category的狀況下，allTasks才會變動。當allTask變動時，從新設定顯示的tasks
     const getProjects = useCallback(()=>{
       const temp = [];
@@ -164,7 +164,7 @@ export const TimeCard = () => {
 
         let searchArray = searchInput.replace(/\s\s+/g, ' ').split(' ');
         // 生技 and 藥 or 氣候 not 政策
-        console.log(searchArray);
+        // console.log(searchArray);
         for (let i=0; i<searchArray.length; ++i){
           if ( i === 0 ){
             searchKeys[andPrefix].push(searchArray[i]); continue;
