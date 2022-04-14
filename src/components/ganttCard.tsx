@@ -98,8 +98,7 @@ export const GanttCard = () => {
       }
       _departments = [...Array.from(new Set(_departments))];
       _departments =_departments.sort();
-      setDepartments(_departments);
-      
+      setDepartments(_departments);      
     }, [allTasks])
 
 
@@ -268,8 +267,7 @@ export const GanttCard = () => {
     const [topicFig, setTopicFig] = useState<string>(TopicHtmls[0]);
     
     const toggleBertopic = ()=>{      
-      setMode("BERTopic")
-      
+      setMode("BERTopic")      
       setTopicFigWidth(1050)
       setTopicFigHeight(550)
     }
@@ -300,13 +298,12 @@ export const GanttCard = () => {
                       </Form.Select>
                     </Col>
                     <Col>
-                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeDepartment} value={selectedDepartment}>
+                      { mode == "Gantt" ? <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeDepartment} value={selectedDepartment}>
                           <option value="">未設定部會</option>
-                          {departments.map((x, i) =>
-                            // console.log(x),
+                          {departments.map((x, _) =>                            
                             <option value={x}>{x}</option>
-                          )}   
-                      </Form.Select>
+                          )}
+                      </Form.Select> : null}                      
                     </Col>
                   </Row> : null}
                 </Col>
