@@ -69,7 +69,8 @@ def cleanAndSaveJsonWithOrder(filename):
             "name": label_name_list[idx],
             "id": project_id,
             "displayOrder": label_order,
-            "series": count_data[str(category_num)][str(l)]
+            "series": count_data[str(category_num)][str(l)],
+            
         }
         print(count_data[str(category_num)][str(l)])
         label_data.append(l_json)
@@ -92,6 +93,7 @@ def cleanAndSaveJsonWithOrder(filename):
                 "ner": row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
                 "tf_idf": row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
                 "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
+                "department": row['department'],
             }
             proj_data.append(p_json)
         

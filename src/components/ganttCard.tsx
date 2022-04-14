@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {CategoryContext} from "../helpers/CategoryContext"
 
 import Chart from "react-apexcharts";
+import { selectClasses } from '@mui/material';
 
 export const GanttCard = () => {    
     // 讀取在背景的資料
@@ -27,21 +28,20 @@ export const GanttCard = () => {
     const [categoryName, setCategoryName] = useState<string>('10');
 
     const [options, ] = useState<any>({              
-        plotOptions: {
-          bar: {
+        plotOptions: {bar: {
             horizontal: true
-          }
-        },
+        }},
         xaxis: {
           categories: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021]
         },
         title: { text:'該類別各年份數量統計' }
     })
     
+    const [departments, setDepartments] = useState<string[]>([]);
+    const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+
     const [countData, setCountData] = useState<any>();
     const [extendGantt, setExtendGantt] = useState<boolean>(true);
-
-
     const [ganttColumnWidth, setGanttColumnWidth] = useState<number>(10);
     
     
@@ -71,8 +71,6 @@ export const GanttCard = () => {
       }
       id.sort(function(a, b){return a - b})      
       setCountData(allCount)
-
-      // return allCount
     }, [getProjects])
 
     // 以 project 取得底下的 task
@@ -88,6 +86,23 @@ export const GanttCard = () => {
         return tasks;
     }, [allTasks])
 
+    
+    // 取得部會資料
+    const getDepartments = useCallback(() => {    
+      let _departments: string[] = []
+      
+      for (var i=0; i< allTasks.length; i++){
+          let temp: any = allTasks[i];
+          if (temp.type === "project") continue
+          _departments.push(temp.data.department)
+      }
+      _departments = [...Array.from(new Set(_departments))];
+      _departments =_departments.sort();
+      setDepartments(_departments);
+      
+    }, [allTasks])
+
+
     useEffect(()=>{
       if (extendGantt){
         setGanttColumnWidth(10);
@@ -96,21 +111,29 @@ export const GanttCard = () => {
       }
     }, [extendGantt])
 
-    useEffect(()=>{
+    useEffect(()=>{        
         setSearchString("");
         resetDisplayedTask();
         getProjectsCount();
+        getDepartments()
     }, [allTasks, getProjects]);
+
+    useEffect(()=>{
+      let searchTasks: Task[] = getDepartmentTasks()
+      setDisplayTasks(searchTasks);
+    }, [selectedDepartment]);
 
     // 控制展開項
     useEffect(()=> {    
         let diplayed: Task[] = [...getProjects()];      
         for (let p=0; p < expandedProj.length; ++p){
-        let temp: Task[] = getTasks(expandedProj[p])
-        Array.prototype.push.apply(diplayed, temp);
+          let temp: Task[] = getTasks(expandedProj[p])
+          Array.prototype.push.apply(diplayed, temp);
         }      
         setDisplayTasks(diplayed);
     }, [expandedProj, getProjects, getTasks]);
+
+
 
     const handleExpanderClick = (task: Task) => {    
         if (task.type === "project"){
@@ -132,38 +155,61 @@ export const GanttCard = () => {
         setCurTask(task);
     };
 
-    const changeEvent = (event: any) => {
+    const changeCategory = (event: any) => {
         setCountData([])
-        setexpandedProj([])    
+        setexpandedProj([])
         setCategoryName(event.target.value)
-        setAllTasks(loadData(event.target.value)) 
-        
+        setSelectedDepartment("")
+        setAllTasks(loadData(event.target.value))
     }
+
+    const changeDepartment = (event: any) => {      
+      setSelectedDepartment(event.target.value);
+      setSearchString('');
+    }
+
+    const getDepartmentTasks = (): Task[]=>{
+      
+      if (selectedDepartment === "") return getProjects();      
+      let searchTasks: Task[] = allTasks;
+      function searchDepartment(t:Task){
+        let temp :any = t;
+        if (temp.type !== "task") return false;
+        if (temp.data.department === selectedDepartment) {
+          console.log(temp.data.department)
+          console.log(selectedDepartment)
+          return true;
+        }
+        return false;
+      }
+      searchTasks = searchTasks.filter(searchDepartment);
+      searchTasks = tasksWithProj(searchTasks);
+      return searchTasks;
+    }
+
+    
+
 
     const searchTaskName = (searchInput: string) => {
         let notPrefix="not", andPrefix="and", orPrefix="or";        
         let searchKeys = {} as any;
         let prefixs = [andPrefix, notPrefix, orPrefix];
+        let searchArray = searchInput.replace(/\s\s+/g, ' ').split(' ');
+        
         searchKeys[notPrefix] = [];
         searchKeys[andPrefix] = [];
         searchKeys[orPrefix] = [];
 
-        let searchArray = searchInput.replace(/\s\s+/g, ' ').split(' ');
-        // 生技 and 藥 or 氣候 not 政策
-        // console.log(searchArray);
+        // 生技 and 藥 or 氣候 not 政策        
         for (let i=0; i<searchArray.length; ++i){
           if ( i === 0 ){
             searchKeys[andPrefix].push(searchArray[i]); continue;
           };
-          if (prefixs.includes(searchArray[i])){
-            searchKeys[searchArray[i]].push(searchArray[++i]);
-          }
-          // console.log(searchArray[i]);
+          if (prefixs.includes(searchArray[i])) searchKeys[searchArray[i]].push(searchArray[++i]);
         }
-
+        let searchTasks: Task[] = getDepartmentTasks();
+        // if (selectedDepartment !== "") searchTasks = 
         
-        
-        let searchTasks: Task[] = allTasks;
         // step1. search and 
         function andSearch(t:Task){          
           for (let i=0; i<searchKeys[andPrefix].length; ++i){
@@ -184,27 +230,29 @@ export const GanttCard = () => {
           searchTasks = searchTasks.filter(t=> !String(t.name).includes(searchKeys[notPrefix][i]));
         }
                 
-        let searchTaskId: any[];
-        let searchProjId: any[];
-        searchProjId = [];
-        searchTaskId = [];
-        for (let i=0; i< searchTasks.length; ++i){
-          if (!searchProjId.includes(searchTasks[i].project)){
-              searchProjId.push(searchTasks[i].project)
-          }
-          searchTaskId.push(searchTasks[i].id)
-        }
-            
-        let searchProj = allTasks.filter(p=> 
-        searchProjId.includes(p.id) && !searchTaskId.includes(p.id)
-        );
-        Array.prototype.push.apply(searchTasks, searchProj);
-        
+        searchTasks = tasksWithProj(searchTasks);
         setDisplayTasks(searchTasks);
     }
 
-    const resetDisplayedTask = ()=>{
+    function tasksWithProj(searchTasks: Task[]){
+      let searchTaskId: any[] = [];
+      let searchProjId: any[] = [];
       
+      for (let i=0; i< searchTasks.length; ++i){
+        if (!searchProjId.includes(searchTasks[i].project)){
+            searchProjId.push(searchTasks[i].project)
+        }
+        searchTaskId.push(searchTasks[i].id)
+      }
+          
+      let searchProj = allTasks.filter(p=> 
+      searchProjId.includes(p.id) && !searchTaskId.includes(p.id)
+      );
+      Array.prototype.push.apply(searchTasks, searchProj);
+      return searchTasks;
+    }
+
+    const resetDisplayedTask = ()=>{      
       setSearchString('');
       setDisplayTasks(getProjects());
     }
@@ -239,7 +287,7 @@ export const GanttCard = () => {
                 <Col>
                   { mode === "Gantt" || mode === "TS"  ? <Row>                    
                     <Col>
-                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
+                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeCategory}>
                         <option value="10">10 Category</option>
                         <option value="20">20 Category</option>
                         <option value="30">30 Category</option>
@@ -247,14 +295,15 @@ export const GanttCard = () => {
                         <option value="50">50 Category</option>
                       </Form.Select>
                     </Col>
-                    {/* <Col>
-                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeEvent}>
-                          <option value="10">未設定部會</option>
-                          <option value="20">部會1</option>
-                          <option value="20">部會2</option>
-                          <option value="20">部會3</option>                    
+                    <Col>
+                      <Form.Select aria-label="" style={{maxWidth:"1100px", margin: "auto"}} onChange={changeDepartment} value={selectedDepartment}>
+                          <option value="">未設定部會</option>
+                          {departments.map((x, i) =>
+                            // console.log(x),
+                            <option value={x}>{x}</option>
+                          )}   
                       </Form.Select>
-                    </Col> */}
+                    </Col>
                   </Row> : null}
                 </Col>
                 <Col>

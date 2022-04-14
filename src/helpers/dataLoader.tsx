@@ -65,6 +65,7 @@ export function loadData(catNum: string = '10', prefixStr="revise_length_"){
                 "ner": proj_data[i].ner,
                 "tf_idf": proj_data[i].tf_idf,
                 "desp": proj_data[i].desp,
+                "department": proj_data[i].department,
             }
         } as Task;
         
