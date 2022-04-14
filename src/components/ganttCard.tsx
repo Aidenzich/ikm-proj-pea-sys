@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {CategoryContext} from "../helpers/CategoryContext"
 
 import Chart from "react-apexcharts";
-import { selectClasses } from '@mui/material';
+// import { selectClasses } from '@mui/material';
 
 export const GanttCard = () => {    
     // 讀取在背景的資料
@@ -254,7 +254,11 @@ export const GanttCard = () => {
 
     const resetDisplayedTask = ()=>{      
       setSearchString('');
-      setDisplayTasks(getProjects());
+      if (selectedDepartment !== ""){
+        setDisplayTasks(getDepartmentTasks());
+      } else {
+        setDisplayTasks(getProjects());
+      }      
     }
 
     const [mode, setMode] = useState<String>("Gantt");
