@@ -391,7 +391,7 @@ export const GanttCard = () => {
                         tasks={displayTasks}
                         viewMode={ViewMode.Month}
                         columnWidth={ganttColumnWidth}
-                        handleWidth={40}                      
+                        handleWidth={40}
                         listCellWidth={""}
                         TooltipContent={MyToolTipContent}
                         onDoubleClick={handleExpanderClick}
