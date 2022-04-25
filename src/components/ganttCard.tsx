@@ -77,11 +77,11 @@ export const GanttCard = () => {
     const getTasks = useCallback((project: Task): Task[] => {
         const tasks = [];
         if (project !== undefined){
-        for (var i=0; i< allTasks.length; i++){
-            if (allTasks[i].project === project.id) {
-              tasks.push(allTasks[i]);
-            };
-        }
+          for (var i=0; i< allTasks.length; i++){
+              if (allTasks[i].project === project.id) {
+                tasks.push(allTasks[i]);
+              };
+          }
         }
         return tasks;
     }, [allTasks])
@@ -168,8 +168,9 @@ export const GanttCard = () => {
     }
 
     const getDepartmentTasks = (): Task[]=>{
-      
-      if (selectedDepartment === "") return getProjects();      
+      if (selectedDepartment === "" && searchString === "") return getProjects();
+      if (selectedDepartment === "") return allTasks;
+
       let searchTasks: Task[] = allTasks;
       function searchDepartment(t:Task){
         let temp :any = t;
