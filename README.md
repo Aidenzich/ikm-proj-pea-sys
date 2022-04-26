@@ -48,6 +48,14 @@ if __name__ == '__main__':
     # cleanAndSaveJsonWithOrder('<csvfile_you_want_to_read>')
 ```
 
+
+## 修改default分類數目
+在`src/components/ganttCard.tsx`下
+```js
+const [categoryName, setCategoryName] = useState<string>('10');
+```
+- 設定分類數目`useState<string>(<default-category-num>)`
+
 ## Handle BERTopic
 -  請參見helloBertopic 資料夾，將產生的檔案放入public資料夾中，請確定名稱與原始設定相符。
 

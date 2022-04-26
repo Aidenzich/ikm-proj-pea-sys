@@ -25,7 +25,7 @@ export const GanttCard = () => {
 
     const [searchString, setSearchString] = useState<string>('');  
 
-    const [categoryName, setCategoryName] = useState<string>('10');
+    const [categoryNum, setCategoryNum] = useState<string>('10');
 
     const [options, ] = useState<any>({              
         plotOptions: {bar: {
@@ -157,7 +157,7 @@ export const GanttCard = () => {
     const changeCategory = (event: any) => {
         setCountData([])
         setexpandedProj([])
-        setCategoryName(event.target.value)
+        setCategoryNum(event.target.value)
         setSelectedDepartment("")
         setAllTasks(loadData(event.target.value))
     }
@@ -282,7 +282,7 @@ export const GanttCard = () => {
     }
 
     return (
-        <CategoryContext.Provider value={categoryName}>
+        <CategoryContext.Provider value={categoryNum}>
         <Row className="card-margin-top m-auto align-self-center">
           <Col style={{paddingTop:'2vh'}}>
             <Card className="m-auto" style={{ width:"auto", maxWidth:"1400px"}}>

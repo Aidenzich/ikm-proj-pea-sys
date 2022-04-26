@@ -13,7 +13,7 @@ export const MyToolTipContent: React.FC<{
     
     const category = useContext(CategoryContext)    
 
-    var temp = {
+    var temp : any = {
       options: {
         dataLabels: {
           enabled: true
@@ -38,7 +38,12 @@ export const MyToolTipContent: React.FC<{
     function checkDataSeries(task: any){
       try{
         if (task['data']['series']){
-          temp.series[0].data = task.data.series          
+          temp.series[0].data = task.data.series
+          let catgories = []
+          for (let i=0; i < temp.series[0].data.length; ++i){
+            catgories.push(String(i+2014));
+          }
+          temp.options.xaxis.categories=catgories;                  
           return true;
         }
       }catch(e){
