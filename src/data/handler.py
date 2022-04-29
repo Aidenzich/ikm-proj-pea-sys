@@ -1,4 +1,5 @@
 #%%
+import numpy as np
 import pandas as pd
 import os
 import re
@@ -21,13 +22,17 @@ def cleanAndSaveJsonWithOrder(filename):
     
     filepath = DATA_PATH / filename
     df = pd.read_csv(filepath)
+    
+    # df['num_label'] = df['num_label'].replace(23, 40)
+    # df['num_label'].unique().tolist()
+    # df.to_csv(filename, index=False)
     for c in df.columns.tolist():
         if df[c].dtype == "object" and c != 'description':
             df[c] = df[c].apply(lambda x: str(x).replace('[', '').replace(']', '').replace("'", ''))
 
     df['description'] = df['description'].apply(lambda x: str(x).replace('_x000D_', ''))
 
-    df.to_csv(filepath, index=False)
+    
     df.fillna(" ", inplace=True)
 
     df = df[pd.to_numeric(df['year'], errors='coerce').notnull()]
@@ -37,13 +42,20 @@ def cleanAndSaveJsonWithOrder(filename):
 
     label_data = []
     proj_data = []
-
-
+    
     df.sort_values( by=['num_label'], inplace=True)
-    label_list = df['num_label'].unique().tolist()
-    label_name_list = df['label'].unique().tolist()
-    print(label_list)
-    print(label_name_list)
+    group_df = df.groupby(['num_label', 'label']).size().reset_index()
+    
+    label_list = group_df['num_label'].tolist()
+    label_name_list = group_df['label'].tolist()
+    # print(label_list)
+    # return 
+    
+    
+    
+    # print(len(label_list))
+    # print(len(label_name_list))
+    # return 
     category_num = int(re.search(r'\d+', filename).group())
     TOTAL_YEARS = df.year.value_counts().sort_index().index.tolist()
     proj_id = 0    
@@ -110,8 +122,8 @@ def cleanAndSaveJsonWithOrder(filename):
 
 
 if __name__ == '__main__':
-    cleanAndSaveJsonWithOrder('revise_length_10.csv')
-    cleanAndSaveJsonWithOrder('revise_length_20.csv')    
-    cleanAndSaveJsonWithOrder('revise_length_30.csv')
-    cleanAndSaveJsonWithOrder('revise_length_40.csv')
+    # cleanAndSaveJsonWithOrder('revise_length_10.csv')
+    # cleanAndSaveJsonWithOrder('revise_length_20.csv')    
+    # cleanAndSaveJsonWithOrder('revise_length_30.csv')
+    # cleanAndSaveJsonWithOrder('revise_length_40.csv')
     cleanAndSaveJsonWithOrder('revise_length_50.csv')
