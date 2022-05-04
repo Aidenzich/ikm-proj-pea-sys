@@ -207,16 +207,17 @@ export const GanttCard = () => {
           };
           if (prefixs.includes(searchArray[i])) searchKeys[searchArray[i]].push(searchArray[++i]);
         }
-        let searchTasks: Task[] = getDepartmentTasks();
+        let searchTasks: any[] = getDepartmentTasks();
         // if (selectedDepartment !== "") searchTasks = 
         
         // step1. search and 
-        function andSearch(t:Task){          
+        function andSearch(t: any){          
           for (let i=0; i<searchKeys[andPrefix].length; ++i){
-            if (!String(t.name).includes(searchKeys[andPrefix][i])) return false;
-            // result = String(t.name).includes(separators[andPrefix][i]);
+            if (String(t.name).includes(searchKeys[andPrefix][i])) return true;
+            if (String(t.data.desp).includes(searchKeys[andPrefix][i])) return true;
+
           }
-          return true;
+          return false;
         }
         searchTasks = searchTasks.filter(andSearch);
         
@@ -227,7 +228,10 @@ export const GanttCard = () => {
 
         // step3. exclude not
         for (let i=0; i< searchKeys[notPrefix].length; ++i){
-          searchTasks = searchTasks.filter(t=> !String(t.name).includes(searchKeys[notPrefix][i]));
+          console.log(searchTasks)
+          searchTasks = searchTasks.filter(t=>
+            (!String(t.name).includes(searchKeys[notPrefix][i]) && !String(t.data.desp).includes(searchKeys[notPrefix][i])
+          ));
         }
                 
         searchTasks = tasksWithProj(searchTasks);

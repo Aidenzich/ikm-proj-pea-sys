@@ -1,7 +1,6 @@
 #%%
 import numpy as np
 import pandas as pd
-import os
 import re
 import json
 from pathlib import Path
@@ -61,10 +60,13 @@ def cleanAndSaveJsonWithOrder(filename):
     proj_id = 0    
     df['order'] +=1
 
+    mx_year = int(df['year'].max())
+    
     # 類別資料
     for idx, l in enumerate(label_list):        
         label_df = df[df['num_label']==l]    
         year_list = label_df['year'].unique()
+
         project_id = f"main_{l}"
         label_order = label_df['order'].min() - 1
         # count_years = init_count_years(TOTAL_YEARS)
@@ -76,11 +78,11 @@ def cleanAndSaveJsonWithOrder(filename):
         print(label_name_list)
         
         l_json = {
-            "start":int(min(year_list)),
-            "end": 110,
-            "name": label_name_list[idx],
-            "id": project_id,
-            "displayOrder": label_order,
+            "start": int(min(year_list)),
+            "end": mx_year,
+            "name": str(label_name_list[idx]),
+            "id": str(project_id),
+            "displayOrder": int(label_order),
             "series": count_data[str(category_num)][str(l)],
             
         }
@@ -96,16 +98,16 @@ def cleanAndSaveJsonWithOrder(filename):
             proj_id+=1
             p_json = {
                 "start": int(row['year_start']),
-                "end": int(row['year_end']) if int(row['year_end']) < 110 else int(row['year_end']) + 1,
-                "name":row['name'],
+                "end": int(row['year_end']) if int(row['year_end']) < mx_year else int(row['year_end']) + 1,
+                "name": str(row['name']),
                 "id":f"proj_{proj_id}",
-                "displayOrder":int(row['order']),
+                "displayOrder": int(row['order']),
                 "project": project_id,
-                "keyword": row['keyword'] if (row['keyword'] and row['keyword'].strip())  else "無",
-                "ner": row['ner'] if (row['ner'] and row['ner'].strip()) else "無",
-                "tf_idf": row['tf_idf'] if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
-                "desp": row['description'] if (row['description'] and row['description'].strip()) else "無",
-                "department": row['department'],
+                "keyword": str(row['keyword']) if (row['keyword'] and row['keyword'].strip())  else "無",
+                "ner": str(row['ner']) if (row['ner'] and row['ner'].strip()) else "無",
+                "tf_idf": str(row['tf_idf']) if (row['tf_idf'] and row['tf_idf'].strip()) else "無",
+                "desp": str(row['description']) if (row['description'] and row['description'].strip()) else "無",
+                "department": str(row['department']),
             }
             proj_data.append(p_json)
         
@@ -122,8 +124,8 @@ def cleanAndSaveJsonWithOrder(filename):
 
 
 if __name__ == '__main__':
-    # cleanAndSaveJsonWithOrder('revise_length_10.csv')
-    # cleanAndSaveJsonWithOrder('revise_length_20.csv')    
-    # cleanAndSaveJsonWithOrder('revise_length_30.csv')
-    # cleanAndSaveJsonWithOrder('revise_length_40.csv')
+    cleanAndSaveJsonWithOrder('revise_length_10.csv')
+    cleanAndSaveJsonWithOrder('revise_length_20.csv')    
+    cleanAndSaveJsonWithOrder('revise_length_30.csv')
+    cleanAndSaveJsonWithOrder('revise_length_40.csv')
     cleanAndSaveJsonWithOrder('revise_length_50.csv')
