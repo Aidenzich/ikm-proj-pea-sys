@@ -98,7 +98,7 @@ def cleanAndSaveJsonWithOrder(filename):
             proj_id+=1
             p_json = {
                 "start": int(row['year_start']),
-                "end": int(row['year_end']) if int(row['year_end']) < mx_year else int(row['year_end']) + 1,
+                "end": int(row['year_end']),
                 "name": str(row['name']),
                 "id":f"proj_{proj_id}",
                 "displayOrder": int(row['order']),
