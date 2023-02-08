@@ -1,4 +1,7 @@
 # Project Evolution Analysis System, PEA Sys
+The first iteration of the Nar project has been completed and the subsequent iteration has been passed on to the [laboratory](https://ikmlab.csie.ncku.edu.tw/) students.
+You can find the ssubsequent in [HERE](https://github.com/zhiao777774/NarLab-proj.).
+
 ## Illustration
 ![i1](doc/img/pea-sys.gif)
 # Getting Started with Create React App
